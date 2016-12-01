@@ -45,10 +45,10 @@ b.digitalWrite("P9_15", b.HIGH);
 b.digitalWrite(GPIO[4], b.LOW);
 b.digitalWrite(GPIO[5], b.LOW);
 
-b.digitalWrite("USR0", b.HIGH);
-b.digitalWrite(USR[1], b.HIGH);
-b.digitalWrite(USR[2], b.HIGH);
-b.digitalWrite(USR[3], b.HIGH);
+b.digitalWrite("USR0", b.LOW);
+b.digitalWrite(USR[1], b.LOW);
+b.digitalWrite(USR[2], b.LOW);
+b.digitalWrite(USR[3], b.LOW);
 
 /* Get information every 100ms */
 setInterval(getKillStatus,100);
