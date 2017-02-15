@@ -1,6 +1,11 @@
-bone101
-=======
+## FetchMe
+Autonomous Campus delivery for The University of Texas at Austin
 
-Getting started information for [BeagleBone and BeagleBone Black](http://beagleboard.org) written in [BoneScript](http://github.com/beagleboard/bonescript)
+## Inspiration
 
-The content here is presented by the default web server running with the demonstration Linux distributions provided on BeagleBone and BeagleBone Black. It is written in HTML and makes use of the BoneScript server running on the board and BoneScript JavaScript library running in these HTML pages.
+FatchMe is a UT ECE Senior Design project sponsored by Texas Instruments
+
+## Website
+https://autonomousdesignproject.wordpress.com/
+
+![alt tag](http://tinyimg.io/i/V0YRUCb.png)
