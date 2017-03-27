@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import Adafruit_BBIO.GPIO as GPIO
 import Adafruit_BBIO.ADC as ADC
 import serial
@@ -17,13 +19,13 @@ def is_obstruction():
 	#POLL FOR INTERRUPT, range is 0-1.65V
 	voltage = value * 1.8
 	if voltage > 1.6:
-		print 'Obstruction Detected'
+		print ('Obstruction Detected')
 		return True
 	elif voltage < .3:
-		print 'No Obstruction'
+		print ('No Obstruction')
 		return False
 	else:
-		print 'Should not be able to execute: Error'
+		print ('Should not be able to execute: Error')
 		return False
 
 #Algorithm for obstacle avoidance
@@ -37,7 +39,7 @@ def useCoordinates(passed_coordinates):
     lonDeg = math.radians(passed_coordinates[2])
     lonMin = math.radians(passed_coordinates[3])
     
-    print "This are the coordinates:" ,latDeg, latMin, lonDeg, lonMin
+    print ("This are the coordinates:" ,latDeg, latMin, lonDeg, lonMin)
     radian_list = [latDeg, latMin, lonDeg, lonMin]
     return radian_list
 
@@ -51,15 +53,15 @@ def bearings(brng):
     
 # algorithm for direction
 def travel(past, current):
-	dLon = (current[2]+current[3]/60) - (past[2]+past[3]/60)
+    dLon = (current[2]+current[3]/60) - (past[2]+past[3]/60)
     y = math.sin(dLon)*math.sin(current[0]+current[1]/60)
     x = math.cos(past[0]+past[1]/60)*math.sin(current[0]+current[1]/60)-math.sin(past[0]+past[1]/60)*math.cos(current[0])*math.cos(dLon)
-    print "Y:" ,y
-    print "X:" ,x
+    print ("Y:" ,y)
+    print ("X:" ,x)
     brng = math.atan2(y,x)
     temp = math.degrees(brng)
     res = bearings(temp)
-    print res
+    print (res)
     return res
 
 def inRadius(first, second):
@@ -107,4 +109,5 @@ def motorController(bearing):
 		GPIO.output("P8_11", GPIO.HIGH)
 		GPIO.output("P8_14", GPIO.LOW)
 	else:
-		print "ERROR, NO BEARING"
+		print ("ERROR, NO BEARING")
+	sleep(5)
