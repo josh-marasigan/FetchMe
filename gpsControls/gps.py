@@ -21,13 +21,13 @@ def travel(past, current):
     dLon = (current[2]+current[3]/60) - (past[2]+past[3]/60)
     y = math.sin(dLon)*math.sin(current[0]+current[1]/60)
     x = math.cos(past[0]+past[1]/60)*math.sin(current[0]+current[1]/60)-math.sin(past[0]+past[1]/60)*math.cos(current[0])*math.cos(dLon)
-    print "Y:" ,y
-    print "X:" ,x
+    print ("Y:" ,y)
+    print ("X:" ,x)
     brng = math.atan2(y,x)
     temp = math.degrees(brng)
     res = bearings(temp)
     
-    print res
+    print (res)
     return brng
 
 # inputs: myGPS.latDeg, myGPS.latMin, myGPS.lonDeg, myGPS.lonMin
@@ -37,7 +37,7 @@ def useCoordinates(passed_coordinates):
     lonDeg = math.radians(passed_coordinates[2])
     lonMin = math.radians(passed_coordinates[3])
     
-    print "This are the coordinates:" ,latDeg, latMin, lonDeg, lonMin
+    print ("This are the coordinates:" ,latDeg, latMin, lonDeg, lonMin)
     radian_list = [latDeg, latMin, lonDeg, lonMin]
     return radian_list
     
@@ -76,7 +76,7 @@ class GPS:
             sleep(1)
             ser.flushInput()
             ser.flushInput()
-            print "GPS Initialized"
+            print ("GPS Initialized")
         def read(self):
             ser.flushInput()
             ser.flushInput()
@@ -117,7 +117,7 @@ class GPS:
                 self.sats=NMEA2_array[7]
 myGPS=GPS()
 while(1):
-        print 'Testing'
+        print ('Testing')
         
         local_list = [15,90,95,360]
         current_coordinate = useCoordinates(local_list)
@@ -126,20 +126,20 @@ while(1):
         
         #compare current to past
         res = travel(use, current_coordinate)
-        print res
+        print (res)
         
         #set current to past
         past_coordinate = current_coordinate
         
         myGPS.read()
-        print myGPS.NMEA1
-        print myGPS.NMEA2
-        print 'Universal Time: ',myGPS.timeUTC
-        print 'You are Tracking: ',myGPS.sats,' satellites'
-        print 'My Latitude: ',myGPS.latDeg, 'Degrees ', myGPS.latMin,' minutes ', myGPS.latHem
-        print 'My Longitude: ',myGPS.lonDeg, 'Degrees ', myGPS.lonMin,' minutes ', myGPS.lonHem
-        print 'My Speed: ', myGPS.knots
-        print 'My Altitude: ',myGPS.altitude
+        print (myGPS.NMEA1)
+        print (myGPS.NMEA2)
+        print ('Universal Time: ',myGPS.timeUTC)
+        print ('You are Tracking: ',myGPS.sats,' satellites')
+        print ('My Latitude: ',myGPS.latDeg, 'Degrees ', myGPS.latMin,' minutes ', myGPS.latHem)
+        print ('My Longitude: ',myGPS.lonDeg, 'Degrees ', myGPS.lonMin,' minutes ', myGPS.lonHem)
+        print ('My Speed: ', myGPS.knots)
+        print ('My Altitude: ',myGPS.altitude)
         
         local_list = [myGPS.latDeg, myGPS.latMin, myGPS.lonDeg, myGPS.lonMin]
         current_coordinate = useCoordinates(local_list)
