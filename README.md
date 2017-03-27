@@ -1,8 +1,7 @@
 ## FetchMe
 <p align="center">
-<strong>Autonomous Campus delivery for The University of Texas at Austin</strong><br>
-
-  <img width="400" height="300" src="http://tinyimg.io/i/H6cgMyd.png">
+  <img width="400" height="300" src="http://tinyimg.io/i/H6cgMyd.png"><br>
+  <strong>Autonomous Campus delivery for The University of Texas at Austin</strong>
 </p>
 
 ## Inspiration
