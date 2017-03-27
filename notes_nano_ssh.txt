@@ -1,0 +1,29 @@
+MongoDB Notes:
+Starting Mongo Shell:
+cd <mongodb installation dir>
+./bin/mongo
+
+db   // Display current db
+use <database>    // Use or make indicated DB
+
+///////////////////////////////////////////
+Nano:
+Ctrl + O : Save
+Ctrl + X : Close
+Ctrl+X , Y and Enter
+
+// Navigate to User Home Directory
+cd ~
+// Show current directory
+pwd
+// cd to home debian
+cd /home/debian
+// Edit File blink.py
+nano blink.py 
+// EDIT
+sudo python blink.py
+
+/* Make launch auto */
+sudo crontab -e
+// Type in
+@reboot python /home/debian/blink.py &

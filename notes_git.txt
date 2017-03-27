@@ -1,0 +1,43 @@
+Git update local from master -> Push changes
+git pull origin master
+git status
+git add *
+git commit -m "MESSAGE"
+git push origin master
+
+Git push remote local repo to master
+git init
+git add *
+git commit -m "Initial commit"
+git remote add origin <project url>
+git push -f origin master
+
+Git delete local repo
+git fetch --all
+git reset --hard origin/master// Git delete local repo
+git fetch --all
+git reset --hard origin/master
+
+Git remove file from master
+git rm classes/file.pyc
+git commit -m "bla bla bla"
+git push
+
+Git Synch Fork
+git fetch upstream
+git checkout master
+git merge upstream/master
+
+Git upstream vs. Git origin
+You will use upstream to fetch from the original repo (in order to keep your local copy in sync with the project you want to contribute to).
+You will use origin to pull and push since you can contribute to your own repo.
+
+git remote add upstream <git link>
+
+Git Remove directory from git and local:
+git rm -r one-of-the-directories
+git commit -m "Remove duplicated directory"
+git push origin <your-git-branch>
+
+Switching remote URLs from SSH to HTTPS:
+git remote set-url origin <whatever.git>
