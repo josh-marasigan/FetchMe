@@ -1,17 +1,19 @@
 import serial
+import direction
 import Adafruit_BBIO.UART as UART
 from time import sleep
+
 UART.setup("UART1")
 ser=serial.Serial('/dev/ttyO1',9600)
-route = []
-#class GPSNODE:
- #       def __init__(self):
+
+#Route from SAC to Jester
+route = [(30.284535, -97.736424),(30.284591, -97.737299),(30.284100, -97.737347),(30.283469, -97.737409),(30.282684, -97.737479)]
+#Directions
+bearings = ["NE", "E", "SE", "S", "SW", "W", "NW", "N"]
+route_index = 0
+
 class GPS:
         def __init__(self):
-                #Route from SAC to Jester
-                global route = [
-                (30.284535, -97.736424),(30.284591, -97.737299),(30.284100, -97.737347),(30.283469, -97.737409),(30.282684, -97.737479)
-                ]
                 #This sets up variables for useful commands.
                 #This set is used to set the rate the GPS reports
                 UPDATE_10_sec=  "$PMTK220,10000*2F\r\n" #Update Every 10 Seconds
@@ -92,3 +94,16 @@ while(1):
                 print 'My Longitude: ',myGPS.lonDeg, 'Degrees ', myGPS.lonMin,' minutes ', myGPS.lonHem
                 print 'My Speed: ', myGPS.knots
                 print 'My Altitude: ',myGPS.altitude
+        found_obstruction = direction.is_obstruction()
+        #Obstruction found
+        if found_obstruction:
+                direction.clearpath()
+        #Get next node in path
+        if myGPS.fix!=0:
+                if direction.inRadius((myGPS.latDeg,myGPS.lonDeg),route[route_index]):
+                        if route_index == len(route)-1:
+                                print 'ARRIVED'
+                        else:
+                                route_index = route_index + 1
+                bearing = direction.travel((myGPS.latDeg,myGPS.lonDeg),route[route_index])
+                direction.motorController(bearing)
