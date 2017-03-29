@@ -68,46 +68,47 @@ def inRadius(first, second):
 	return True
 
 def motorController(bearing):
+	#going straight
 	if bearing == 'NE':
 		GPIO.output("P8_8", GPIO.HIGH)
 		GPIO.output("P8_9", GPIO.LOW)
 		GPIO.output("P8_11", GPIO.HIGH)
-		GPIO.output("P8_14", GPIO.LOW)
-	elif bearing == 'E':
+		GPIO.output("P8_14", GPIO.HIGH)
+	elif bearing == 'E': #turn left, 1 period
 		GPIO.output("P8_8", GPIO.HIGH)
 		GPIO.output("P8_9", GPIO.LOW)
 		GPIO.output("P8_11", GPIO.HIGH)
 		GPIO.output("P8_14", GPIO.LOW)
-	elif bearing == 'SE':
+	elif bearing == 'SE': #turn left 2 periods
 		GPIO.output("P8_8", GPIO.HIGH)
 		GPIO.output("P8_9", GPIO.LOW)
 		GPIO.output("P8_11", GPIO.HIGH)
 		GPIO.output("P8_14", GPIO.LOW)
-	elif bearing == 'S':
+	elif bearing == 'S': #turn left 3 periods
 		GPIO.output("P8_8", GPIO.HIGH)
 		GPIO.output("P8_9", GPIO.LOW)
 		GPIO.output("P8_11", GPIO.HIGH)
 		GPIO.output("P8_14", GPIO.LOW)
-	elif bearing == 'SW':
+	elif bearing == 'SW':#turn left 4 periods
 		GPIO.output("P8_8", GPIO.HIGH)
 		GPIO.output("P8_9", GPIO.LOW)
 		GPIO.output("P8_11", GPIO.HIGH)
 		GPIO.output("P8_14", GPIO.LOW)
-	elif bearing == 'W':
+	elif bearing == 'W': #turn right 3 periods
 		GPIO.output("P8_8", GPIO.HIGH)
 		GPIO.output("P8_9", GPIO.LOW)
-		GPIO.output("P8_11", GPIO.HIGH)
-		GPIO.output("P8_14", GPIO.LOW)
-	elif bearing == 'NW':
+		GPIO.output("P8_11", GPIO.LOW)
+		GPIO.output("P8_14", GPIO.HIGH)
+	elif bearing == 'NW':#turn right 2 periods
 		GPIO.output("P8_8", GPIO.HIGH)
 		GPIO.output("P8_9", GPIO.LOW)
-		GPIO.output("P8_11", GPIO.HIGH)
-		GPIO.output("P8_14", GPIO.LOW)
-	elif bearing == 'N':
+		GPIO.output("P8_11", GPIO.LOW)
+		GPIO.output("P8_14", GPIO.HIGH)
+	elif bearing == 'N': #turn right 1 period
 		GPIO.output("P8_8", GPIO.HIGH)
 		GPIO.output("P8_9", GPIO.LOW)
-		GPIO.output("P8_11", GPIO.HIGH)
-		GPIO.output("P8_14", GPIO.LOW)
+		GPIO.output("P8_11", GPIO.LOW)
+		GPIO.output("P8_14", GPIO.HIGH)
 	else:
 		print ("ERROR, NO BEARING")
 	sleep(5)
