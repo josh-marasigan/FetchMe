@@ -13,7 +13,14 @@ GPIO.setup("P8_11", GPIO.OUT)
 GPIO.setup("P8_14", GPIO.OUT)
 #Directions
 directions = ["NE", "E", "SE", "S", "SW", "W", "NW", "N"]
+#Obstacle
+obsL = False
+obsC = False
+obsR = False
+obsBL = False
+obsBR = False
 
+#need to interface 5 sensors
 def is_obstruction():
 	value = ADC.read("P9_36")
 	#POLL FOR INTERRUPT, range is 0-1.65V
@@ -31,6 +38,24 @@ def is_obstruction():
 #Algorithm for obstacle avoidance
 def clearpath():
 	sleep(10)
+	
+#Henry's Algorithm for obstacle avoidance
+def avoid_obstruction():
+	if obsC = True:
+    		if obsR = False:
+			if obsBL = False:
+        			bearing = 'SW'
+            			sleep(1)
+			if obsC = False:
+                		bearing = 'N'
+                		sleep(3)
+		elif obsR = True and obsL = False:
+            		if obsBR = False:
+        			bearing = 'SE'
+				sleep(1)
+			if obsC = False:
+                		bearing = 'N'
+                		sleep(3)
 
 # inputs: myGPS.latDeg, myGPS.latMin, myGPS.lonDeg, myGPS.lonMin
 def useCoordinates(passed_coordinates):
