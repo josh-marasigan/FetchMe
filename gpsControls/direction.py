@@ -69,6 +69,7 @@ def inRadius(first, second):
 
 def motorController(bearing):
 	#going straight
+	## Accommodate bearings with direction
 	if bearing == 'NE':
 		GPIO.output("P8_8", GPIO.HIGH)
 		GPIO.output("P8_9", GPIO.LOW)
