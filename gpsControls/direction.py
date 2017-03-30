@@ -42,20 +42,20 @@ def clearpath():
 #Henry's Algorithm for obstacle avoidance
 def avoid_obstruction():
 	if obsC = True:
-    		if obsR = False:
-			if obsBL = False:
-        			bearing = 'SW'
-            			sleep(1)
-			if obsC = False:
-                		bearing = 'N'
-                		sleep(3)
+    	if obsR = False:
+		if obsBL = False:
+        	bearing = 'SW'
+       		sleep(1)
+		if obsC = False:
+       		bearing = 'N'
+       		sleep(3)
 		elif obsR = True and obsL = False:
-            		if obsBR = False:
-        			bearing = 'SE'
+            if obsBR = False:
+        		bearing = 'SE'
 				sleep(1)
 			if obsC = False:
-                		bearing = 'N'
-                		sleep(3)
+                bearing = 'N'
+                sleep(3)
 
 # inputs: myGPS.latDeg, myGPS.latMin, myGPS.lonDeg, myGPS.lonMin
 def useCoordinates(passed_coordinates):
