@@ -47,6 +47,36 @@ class TestStringMethods(unittest.TestCase):
             self.assertEqual(actual_movements[count], e)
             count = count + 1
 
+    def test_in_radius(self):
+        route = [(30.284743, -97.736801),(30.284591, -97.737299),(30.284100, -97.737347),(30.283469, -97.737409),(30.282684, -97.737479)]
+        route1 = [(30.284731, -97.736803),(30.284583, -97.737303),(30.284102, -97.737354),(30.283469, -97.737418),(30.282683, -97.737472)]
+        #route1 is actual gps coordinates
+        for index in range(0, 5):
+            isInRadius = Nav.inRadius(route[index], route1[index])
+            lon1 = route[index][0]
+            lat1 = route[index][1]
+            lon2 = route1[index][0]
+            lat2 = route1[index][1]
+            #print "TEST 1: ",Nav.haversine(lon1, lat1, lon2, lat2)
+            #print isInRadius
+            self.assertTrue(isInRadius)
+        
+        #Opposite directions. Must return false
+        route2 = route[::-1]
+        route2[2] = (30.284731, -97.736803)
+        
+        for i in range(0, 5):
+            isInRadius = Nav.inRadius(route[i], route2[i])
+            lon1 = route[i][0]
+            lat1 = route[i][1]
+            lon2 = route2[i][0]
+            lat2 = route2[i][1]
+            #print "Test 2: ",Nav.haversine(lon1, lat1, lon2, lat2)
+            #print lon1, lat1, lon2, lat2
+            #print isInRadius
+            self.assertFalse(isInRadius)
+        
+
     def test_upper(self):
         self.assertEqual('foo'.upper(), 'FOO')
 

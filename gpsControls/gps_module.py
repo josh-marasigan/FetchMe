@@ -112,7 +112,9 @@ while(1):
         direction.avoid_obstruction()
     #Get next node in path
     if myGPS.fix!=0:
-        if direction.inRadius((myGPS.latDeg,myGPS.lonDeg),route[route_index]):
+        latD = float(myGPS.latDeg)
+        lonD = float(myGPS.latDeg)
+        if direction.inRadius((latD,lonD),route[route_index]):
             if route_index == len(route)-1:
                 print ('ARRIVED')
             else:

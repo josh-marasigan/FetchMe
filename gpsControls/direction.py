@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
-
 import Adafruit_BBIO.GPIO as GPIO
 import Adafruit_BBIO.ADC as ADC
 import serial
 import math
+from math import radians, cos, sin, asin, sqrt
 from time import sleep
 
 ADC.setup() #USE 1.8V ONLY!!! 
@@ -71,38 +71,6 @@ def avoid_obstruction():
 				movements.append('None')
 		return movements
 
-	    			
-#Henry's Algorithm for obstacle avoidance (TEST)
-def avoid_obstruction_T(isObstruction):
-	# Assert that correct movements according to obstructions
-	movements = []
-	
-	#count for testing purposes only/5 cycles of backing up
-	obsC = isObstruction
-	if obsC == True:
-		while obsC == True:
-			obsC = False
-			if obsR == False:
-				if obsBL == False:
-					bearing = 'SW'
-					movements.append('SW')
-					sleep(1)
-					if obsC == False:
-						bearing = 'N'
-						movements.append('N')
-						sleep(3)
-			elif obsR == True and obsL == False:
-				if obsBR == False:
-					bearing = 'SE'
-					movements.append('SE')
-					sleep(1)
-					if obsC == False:
-						bearing = 'N'
-						movements.append('N')
-						sleep(3)
-			else:
-				movements.append('None')
-		return movements
 # inputs: myGPS.latDeg, myGPS.latMin, myGPS.lonDeg, myGPS.lonMin
 def useCoordinates(passed_coordinates):
     latDeg = math.radians(passed_coordinates[0])
@@ -135,8 +103,29 @@ def travel(past, current):
     print (res)
     return res
 
+# Input : Two pairs of tuple coordinates
 def inRadius(first, second):
-	return True
+	# Within 4th decimal coordinate
+	#radius = 0.00028 # Approx 2 feet
+	#print 'First Circle: ',pow((second[0] - first[0]),2) + pow((second[1] - first[1]),2)
+
+	#print 'Second Circle: ',pow(flt,2)
+	buffer_dist = 0.0013
+	
+	#flt = float(radius)
+	#isInside = (pow((second[0] - first[0]),2) + pow((second[1] - first[1]),2) < pow(flt,2))
+	lon1 = first[0]
+	lat1 = first[1]
+	lon2 = second[0]
+	lat2 = second[1]
+	
+	#find distance between coordinates by haversine formula
+	distance = haversine(lon1, lat1, lon2, lat2)
+	
+	if (distance < buffer_dist):
+		return True
+	else:
+		return False
 
 def motorController(bearing):
 	#going straight
@@ -184,3 +173,18 @@ def motorController(bearing):
 	else:
 		print ("ERROR, NO BEARING")
 	sleep(5)
+
+# Haversine formula
+def haversine(lon1, lat1, lon2, lat2):
+
+    # convert decimal degrees to radians 
+    lon1, lat1, lon2, lat2 = map(radians, [lon1, lat1, lon2, lat2])
+    
+    # haversine formula 
+    dlon = lon2 - lon1 
+    dlat = lat2 - lat1 
+    
+    a = sin(dlat/2)**2 + cos(lat1) * cos(lat2) * sin(dlon/2)**2
+    c = 2 * asin(sqrt(a)) 
+    km = 6367 * c
+    return km
