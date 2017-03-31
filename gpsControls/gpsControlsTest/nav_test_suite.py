@@ -14,7 +14,7 @@ class TestStringMethods(unittest.TestCase):
         Nav.obsR = False
         Nav.obsL = True
         Nav.obsC = True
-        actual_movements = Nav.avoid_obstruction_T(True)
+        actual_movements = Nav.avoid_obstruction()
         
         # Verify correct movements
         count = 0
@@ -26,7 +26,7 @@ class TestStringMethods(unittest.TestCase):
         Nav.obsR = True
         Nav.obsL = False
         Nav.obsC = True
-        actual_movements = Nav.avoid_obstruction_T(True)
+        actual_movements = Nav.avoid_obstruction()
         
         # Verify correct movements
         count = 0
@@ -39,7 +39,7 @@ class TestStringMethods(unittest.TestCase):
         Nav.obsR = True
         Nav.obsL = True
         Nav.obsC = True
-        actual_movements = Nav.avoid_obstruction_T(True)
+        actual_movements = Nav.avoid_obstruction()
         
         # Verify correct movements
         count = 0

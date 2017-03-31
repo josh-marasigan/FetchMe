@@ -40,8 +40,12 @@ def avoid_obstruction():
 	# Assert that correct movements according to obstructions
 	movements = []
 	
-	#count for testing purposes only/5 cycles of backing up
-	obsC = isObstruction
+	global obsL
+	global obsC
+	global obsR
+	global obsBL
+	global obsBR
+	
 	if obsC == True:
 		while obsC == True:
 			obsC = False

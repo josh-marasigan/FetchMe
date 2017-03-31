@@ -90,6 +90,11 @@ class GPS:
             self.sats=NMEA2_array[7]
 myGPS=GPS()
 while(1):
+    # pass global values as params
+    global route
+    global bearings
+    global route_index
+    
     print ("ITERATION")
     myGPS.read()
     print (myGPS.NMEA1)
