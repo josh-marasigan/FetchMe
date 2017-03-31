@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-
 import serial
 import direction
 import Adafruit_BBIO.UART as UART
@@ -105,12 +104,10 @@ while(1):
     found_obstruction = direction.is_obstruction()
     #Obstruction found
     if found_obstruction:
-        direction.clearpath()
+        direction.avoid_obstruction()
     #Get next node in path
     if myGPS.fix!=0:
-        latit = float(myGPS.latDeg)
-        longit = float(myGPS.lonDeg)
-        if direction.inRadius((latit,longit),route[route_index]):
+        if direction.inRadius((myGPS.latDeg,myGPS.lonDeg),route[route_index]):
             if route_index == len(route)-1:
                 print ('ARRIVED')
             else:

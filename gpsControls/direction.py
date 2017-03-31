@@ -34,29 +34,71 @@ def is_obstruction():
 	else:
 		print ('Should not be able to execute: Error')
 		return False
-
-#Algorithm for obstacle avoidance
-def clearpath():
-	sleep(10)
 	
 #Henry's Algorithm for obstacle avoidance
 def avoid_obstruction():
-	if obsC = True:
-    	if obsR = False:
-		if obsBL = False:
-        	bearing = 'SW'
-       		sleep(1)
-		if obsC = False:
-       		bearing = 'N'
-       		sleep(3)
-		elif obsR = True and obsL = False:
-            if obsBR = False:
-        		bearing = 'SE'
-				sleep(1)
-			if obsC = False:
-                bearing = 'N'
-                sleep(3)
+	# Assert that correct movements according to obstructions
+	movements = []
+	
+	#count for testing purposes only/5 cycles of backing up
+	obsC = isObstruction
+	if obsC == True:
+		while obsC == True:
+			obsC = False
+			if obsR == False:
+				if obsBL == False:
+					bearing = 'SW'
+					movements.append('SW')
+					sleep(1)
+					if obsC == False:
+						bearing = 'N'
+						movements.append('N')
+						sleep(3)
+			elif obsR == True and obsL == False:
+				if obsBR == False:
+					bearing = 'SE'
+					movements.append('SE')
+					sleep(1)
+					if obsC == False:
+						bearing = 'N'
+						movements.append('N')
+						sleep(3)
+			else:
+				movements.append('None')
+		return movements
 
+	    			
+#Henry's Algorithm for obstacle avoidance (TEST)
+def avoid_obstruction_T(isObstruction):
+	# Assert that correct movements according to obstructions
+	movements = []
+	
+	#count for testing purposes only/5 cycles of backing up
+	obsC = isObstruction
+	if obsC == True:
+		while obsC == True:
+			obsC = False
+			if obsR == False:
+				if obsBL == False:
+					bearing = 'SW'
+					movements.append('SW')
+					sleep(1)
+					if obsC == False:
+						bearing = 'N'
+						movements.append('N')
+						sleep(3)
+			elif obsR == True and obsL == False:
+				if obsBR == False:
+					bearing = 'SE'
+					movements.append('SE')
+					sleep(1)
+					if obsC == False:
+						bearing = 'N'
+						movements.append('N')
+						sleep(3)
+			else:
+				movements.append('None')
+		return movements
 # inputs: myGPS.latDeg, myGPS.latMin, myGPS.lonDeg, myGPS.lonMin
 def useCoordinates(passed_coordinates):
     latDeg = math.radians(passed_coordinates[0])
