@@ -130,7 +130,9 @@ while(1):
         
         #set current to past
         past_coordinate = current_coordinate
-        
+
+        # Comparison for two points in relative direction
+
         myGPS.read()
         print (myGPS.NMEA1)
         print (myGPS.NMEA2)
