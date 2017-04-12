@@ -6,21 +6,39 @@ import math
 from math import radians, cos, sin, asin, sqrt
 from time import sleep
 
-ADC.setup() #USE 1.8V ONLY!!! 
+ADC.setup()
+
+#Front, Right, Left, Back in that order
+#USE 1.8V ONLY FOR THESE PORTS!!!
+#USE 1.8V ONLY FOR THESE PORTS!!!
+#USE 1.8V ONLY FOR THESE PORTS!!!
+#USE 1.8V ONLY FOR THESE PORTS!!!
+GPIO.setup("P8_6", GPIO.IN)
+GPIO.setup("P8_7", GPIO.IN)
+GPIO.setup("P8_12", GPIO.IN)
+GPIO.setup("P8_13", GPIO.IN)
+#WE WILL FRY THE CIRCUIT IF WE DONT LOL
+#WE WILL FRY THE CIRCUIT IF WE DONT LOL
+#WE WILL FRY THE CIRCUIT IF WE DONT LOL
+#WE WILL FRY THE CIRCUIT IF WE DONT LOL
+
+#Motor Controls. Front/Back, Left/Right
 GPIO.setup("P8_8", GPIO.OUT)
 GPIO.setup("P8_9", GPIO.OUT)
 GPIO.setup("P8_11", GPIO.OUT)
 GPIO.setup("P8_14", GPIO.OUT)
+
 #Directions
 directions = ["NE", "E", "SE", "S", "SW", "W", "NW", "N"]
-#Obstacle
+
+#Obstacle detection Flags
 obsL = False
 obsC = False
 obsR = False
 obsBL = False
 obsBR = False
 
-#need to interface 5 sensors
+#Need to interface 5 sensors
 def is_obstruction():
 	value = ADC.read("P9_36")
 	#POLL FOR INTERRUPT, range is 0-1.65V
@@ -71,7 +89,8 @@ def avoid_obstruction():
 				movements.append('None')
 		return movements
 
-# inputs: myGPS.latDeg, myGPS.latMin, myGPS.lonDeg, myGPS.lonMin
+#Inputs: myGPS.latDeg, myGPS.latMin, myGPS.lonDeg, myGPS.lonMin
+#Outputs: Converted Coordinates in Radians
 def useCoordinates(passed_coordinates):
     latDeg = math.radians(passed_coordinates[0])
     latMin = math.radians(passed_coordinates[1])
