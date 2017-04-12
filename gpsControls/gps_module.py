@@ -149,7 +149,7 @@ class GPS:
 
 #Instance of GPS class (Main GPS/Observer Design)
 myGPS=GPS()
-
+myPastGPS=GPS() #last known GPS coordinates
 while(1):
 
     #Get current clock cycle (For turn timing)
@@ -166,6 +166,15 @@ while(1):
         print ('My Longitude: ',myGPS.lonDeg, 'Degrees ', myGPS.lonMin,' minutes ', myGPS.lonHem)
         print ('My Speed: ', myGPS.knots)
         print ('My Altitude: ',myGPS.altitude)
+    
+    #Calculate the car's heading traveled between the GPS polls  
+    pastBearing = direction.calculate_initial_compass_bearing(
+            (myPastGPS.currentLat, myPastGPS.currentLon),
+            (currentLat,currentLon)
+            )
+    
+    #Set current GPS as "past GPS" 
+    myPastGPS = myGPS
     
     #Consintually poll for obstruction
     found_obstruction = direction.is_obstruction()
