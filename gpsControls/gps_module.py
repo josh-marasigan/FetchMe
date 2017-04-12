@@ -3,6 +3,9 @@ import serial
 import direction
 import Adafruit_BBIO.UART as UART
 from time import sleep
+from decimal import *
+#6 decimal points to represent coordinates
+getcontext().prec = 6
 
 UART.setup("UART1")
 ser=serial.Serial('/dev/ttyO1',9600)
@@ -19,22 +22,30 @@ bearings = ["NE", "E", "SE", "S", "SW", "W", "NW", "N"]
 clock_cycle = 0
 route_index = 0
 
+#Global Current Latitude and Longitude
+currentLat = "30.284743"
+currentLon = "-97.736801"
+
 class GPS:
     def __init__(self):
+        
         #This sets up variables for useful commands.
         #This set is used to set the rate the GPS reports
         UPDATE_10_sec=  "$PMTK220,10000*2F\r\n" #Update Every 10 Seconds
         UPDATE_5_sec=  "$PMTK220,5000*1B\r\n"   #Update Every 5 Seconds  
         UPDATE_1_sec=  "$PMTK220,1000*1F\r\n"   #Update Every One Second
         UPDATE_200_msec=  "$PMTK220,200*2C\r\n" #Update Every 200 Milliseconds
+        
         #This set is used to set the rate the GPS takes measurements
         MEAS_10_sec = "$PMTK300,10000,0,0,0,0*2C\r\n" #Measure every 10 seconds
         MEAS_5_sec = "$PMTK300,5000,0,0,0,0*18\r\n"   #Measure every 5 seconds
         MEAS_1_sec = "$PMTK300,1000,0,0,0,0*1C\r\n"   #Measure once a second
         MEAS_200_msec= "$PMTK300,200,0,0,0,0*2F\r\n"  #Meaure 5 times a second
+        
         #Set the Baud Rate of GPS
         BAUD_57600 = "$PMTK251,57600*2C\r\n"          #Set Baud Rate at 57600
         BAUD_9600 ="$PMTK251,9600*17\r\n"             #Set 9600 Baud Rate
+        
         #Commands for which NMEA Sentences are sent
         ser.write(BAUD_9600)
         sleep(1)
@@ -52,30 +63,59 @@ class GPS:
         ser.flushInput()
         ser.flushInput()
         print ("GPS Initialized")
+        
     def read(self):
+        #Fix will be overriden if satellites acquired. '0' otherwise to prevent lock
+        self.fix=0
+        
         ser.flushInput()
         ser.flushInput()
         while ser.inWaiting()==0:
+            print ("Polling for serial A")
             pass
+        
         self.NMEA1=ser.readline()
+        
         while ser.inWaiting()==0:
+            print ("Polling for serial B")
             pass
+        
         self.NMEA2=ser.readline()
         NMEA1_array=self.NMEA1.split(',')
         NMEA2_array=self.NMEA2.split(',')
+        
+        # Default Values for testing
+        print ("Parsed Coordinate Input")
+        self.timeUTC='12:00'
+        self.latDeg='9999.9'
+        currentLat = self.latDeg
+        self.latMin='-1'
+        self.latHem='-1'
+        self.lonDeg='9999.9'
+        currentLon = self.lonDeg
+        self.lonMin='-1'
+        self.lonHem='-1'
+        self.knots='0'
+        self.altitude='0'
+        self.sats='0'
+        
         if NMEA1_array[0]=='$GPRMC':
             self.timeUTC=NMEA1_array[1][:-8]+':'+NMEA1_array[1][-8:-6]+':'+NMEA1_array[1][-6:-4]
             self.latDeg=NMEA1_array[3][:-7]
+            currentLat = self.latDeg
             self.latMin=NMEA1_array[3][-7:]
             self.latHem=NMEA1_array[4]
             self.lonDeg=NMEA1_array[5][:-7]
+            currentLon = self.lonDeg
             self.lonMin=NMEA1_array[5][-7:]
             self.lonHem=NMEA1_array[6]
             self.knots=NMEA1_array[7]
+            
         if NMEA1_array[0]=='$GPGGA':
             self.fix=NMEA1_array[6]
             self.altitude=NMEA1_array[9]
             self.sats=NMEA1_array[7]
+            
         if NMEA2_array[0]=='$GPRMC':
             self.timeUTC=NMEA2_array[1][:-8]+':'+NMEA1_array[1][-8:-6]+':'+NMEA1_array[1][-6:-4]
             self.latDeg=NMEA2_array[3][:-7]
@@ -85,23 +125,17 @@ class GPS:
             self.lonMin=NMEA2_array[5][-7:]
             self.lonHem=NMEA2_array[6]
             self.knots=NMEA2_array[7]
+            
         if NMEA2_array[0]=='$GPGGA':
             self.fix=NMEA2_array[6]
             self.altitude=NMEA2_array[9]
             self.sats=NMEA2_array[7]
 myGPS=GPS()
 while(1):
-    
     #Get current clock cycle (For turn timing)
-    if clock_cycle%10==0:
-        print ("Iteration Count: " + clock_cycle)
+    print ("Iteration Count: " + str(clock_cycle))
     
     clock_cycle = clock_cycle + 1
-    
-    #Pass global values as params
-    global route
-    global bearings
-    global route_index
     
     #Gather location data
     myGPS.read()
@@ -122,14 +156,33 @@ while(1):
     
     #Get next node in path
     if myGPS.fix!=0:
-        latD = float(myGPS.latDeg)
-        lonD = float(myGPS.latDeg)
+        print ("GET COORDINATES POLL")
+        print (currentLat)
+        print (currentLon)
+        print ("GET COORDINATES POLL DONE")
+        sleep(.1)
+        latD = Decimal(currentLat)
+        lonD = Decimal(currentLon)
+        
         if direction.inRadius((latD,lonD),route[route_index]):
             if route_index == len(route)-1:
                 print ('ARRIVED')
             else:
                 route_index = route_index + 1
-        bearing = direction.travel((myGPS.latDeg,myGPS.lonDeg),route[route_index])
-        direction.motorController(bearing)
+        
+        target_node = route[route_index]
+        bearing = direction.calculate_initial_compass_bearing(
+            (currentLat,currentLon),
+            (target_node[0],target_node[1])
+            )
+        
+        print (bearing)
+        go_towards = direction.bearings(bearing)
+        print (go_towards)
+        direction.motorController(go_towards)
+    
+    # Current travel node
+    print (route[route_index])
+    print (len(route) - (route_index+1))
     sleep(1)
     
