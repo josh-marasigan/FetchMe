@@ -16,6 +16,7 @@ route2 = temp2[::-1]
 route3 = [(30.284535, -97.736424),(30.284591, -97.737299),(30.284100, -97.737347),(30.283469, -97.737409),(30.283411, -97.736777)]
 #Directions
 bearings = ["NE", "E", "SE", "S", "SW", "W", "NW", "N"]
+clock_cycle = 0
 route_index = 0
 
 class GPS:
@@ -90,15 +91,20 @@ class GPS:
             self.sats=NMEA2_array[7]
 myGPS=GPS()
 while(1):
-    # pass global values as params
+    
+    #Get current clock cycle (For turn timing)
+    if clock_cycle%10==0:
+        print ("Iteration Count: " + clock_cycle)
+    
+    clock_cycle = clock_cycle + 1
+    
+    #Pass global values as params
     global route
     global bearings
     global route_index
     
-    print ("ITERATION")
+    #Gather location data
     myGPS.read()
-    print (myGPS.NMEA1)
-    print (myGPS.NMEA2)
     if myGPS.fix!=0:
         print ('Universal Time: ',myGPS.timeUTC)
         print ('You are Tracking: ',myGPS.sats,' satellites')
@@ -106,10 +112,14 @@ while(1):
         print ('My Longitude: ',myGPS.lonDeg, 'Degrees ', myGPS.lonMin,' minutes ', myGPS.lonHem)
         print ('My Speed: ', myGPS.knots)
         print ('My Altitude: ',myGPS.altitude)
+    
+    #Consintually poll for obstruction
     found_obstruction = direction.is_obstruction()
+    
     #Obstruction found
     if found_obstruction:
         direction.avoid_obstruction()
+    
     #Get next node in path
     if myGPS.fix!=0:
         latD = float(myGPS.latDeg)
@@ -122,3 +132,4 @@ while(1):
         bearing = direction.travel((myGPS.latDeg,myGPS.lonDeg),route[route_index])
         direction.motorController(bearing)
     sleep(1)
+    
