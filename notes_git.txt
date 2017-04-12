@@ -41,3 +41,6 @@ git push origin <your-git-branch>
 
 Switching remote URLs from SSH to HTTPS:
 git remote set-url origin <whatever.git>
+
+Check Current Version of Repository (HEAD)
+git log -1

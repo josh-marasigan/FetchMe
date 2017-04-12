@@ -27,6 +27,10 @@ bearings = ["NE", "E", "SE", "S", "SW", "W", "NW", "N"]
 clock_cycle = 0
 route_index = 0
 
+#Global Bearings
+currentBearing = "X"
+pastBearing = "X"
+
 class GPS:
     def __init__(self):
         
@@ -76,15 +80,19 @@ class GPS:
         ser.flushInput()
         
         #Poll serial port for gprmc or gpgga
+        print ("Polling for serial A")
         while ser.inWaiting()==0:
-            print ("Polling for serial A")
             pass
+        
+        print ("Done Polling for A")
         self.NMEA1=ser.readline()
         
         #Poll serial port for gprmc or gpgga
+        print ("Polling for serial B")
         while ser.inWaiting()==0:
-            print ("Polling for serial B")
             pass
+        
+        print ("Done Polling for B")
         self.NMEA2=ser.readline()
         
         #While condition ensures NMEA1 or 2 is not empty
@@ -188,10 +196,7 @@ while(1):
     #Get current clock cycle (For turn timing)
     print ("Iteration Count: " + str(clock_cycle))
     
-    clock_cycle = clock_cycle + 1
-    
     #Gather location data
-    print ('POLLING FOR GPA COORDINATES')
     print ('POLLING FOR GPA COORDINATES')
     
     myGPS.read()
@@ -205,9 +210,9 @@ while(1):
         print ('CURRENT LATITUDE COORDINATE',myGPS.currentLat)
         print ('CURRENT LONGITUDE COORDINATE',myGPS.currentLon)
     
-    #Calculate the car's heading traveled between the GPS polls  
-    pastBearing = direction.calculate_initial_compass_bearing(
-        (myPastGPS.currentLat, myPastGPS.currentLon),(currentLat,currentLon))
+    #Calculate the car's heading traveled between the GPS polls
+    if clock_cycle!=0:
+        pastBearing = direction.calculate_initial_compass_bearing((myPastGPS.currentLat, myPastGPS.currentLon),(myGPS.currentLat,myGPS.currentLon))
     
     #Set current GPS as "past GPS" 
     myPastGPS = myGPS
@@ -235,19 +240,27 @@ while(1):
             else:
                 route_index = route_index + 1
         
+        #Bearing in terms of CURRENT LOCATION towards NEXT TARGET NODE
         target_node = route[route_index]
-        bearing = direction.calculate_initial_compass_bearing(
-            (myGPS.currentLat,myGPS.currentLon),
-            (target_node[0],target_node[1])
-            )
+        currentBearing = direction.calculate_initial_compass_bearing((myGPS.currentLat,myGPS.currentLon),(target_node[0],target_node[1]))
+        print ('Bearing in Degrees: ',currentBearing)
+
+        #Bearing in terms of CURRENT LOCATION from PAST LOCATION
+        past_node = (myPastGPS.currentLat,myPastGPS.currentLon)
+        prevBearing = direction.calculate_initial_compass_bearing((past_node[0],past_node[1]),(myGPS.currentLat,myGPS.currentLon))
+        print ('Bearing in Degrees: ',prevBearing)
         
-        print ('Bearing in Degrees: ',bearing)
-        go_towards = direction.bearings(bearing)
-        print ('Current Moving Direction: ',go_towards)
-        direction.motorController(go_towards)
+        #Does the car need to turn left or right to adjust course?
+        turnAngle = direction.get_angle(currentBearing, prevBearing)
+        newBearing = direction.bearings(turnAngle)
+        
+        #Perform actual car movement
+        print ('Current Moving Direction: ',newBearing)
+        direction.motorController(newBearing)
     
     # Current travel node
     print ('Current Target Coordinate Node: ',route[route_index])
     print ('Number of Nodes Until Destination: ',len(route) - (route_index+1))
+    clock_cycle = clock_cycle + 1
     sleep(1)
     

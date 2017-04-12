@@ -111,17 +111,17 @@ def bearings(brng):
 
 # algorithm for direction given old coordinate format
 def travel(past, current):
-    dLon = (current[2]+current[3]/60) - (past[2]+past[3]/60)
-    y = math.sin(dLon)*math.sin(current[0]+current[1]/60)
-    x = math.cos(past[0]+past[1]/60)*math.sin(current[0]+current[1]/60)-math.sin(past[0]+past[1]/60)*math.cos(current[0])*math.cos(dLon)
-    print ("Y:" ,y)
-    print ("X:" ,x)
-    brng = math.atan2(y,x)
-    temp = math.degrees(brng)
-    res = bearings(temp)
-    print (res)
-    return res
-
+	dLon = (current[2]+current[3]/60) - (past[2]+past[3]/60)
+	y = math.sin(dLon)*math.sin(current[0]+current[1]/60)
+	x = math.cos(past[0]+past[1]/60)*math.sin(current[0]+current[1]/60)-math.sin(past[0]+past[1]/60)*math.cos(current[0])*math.cos(dLon)
+	print ("Y:" ,y)
+	print ("X:" ,x)
+	brng = math.atan2(y,x)
+	temp = math.degrees(brng)
+	res = bearings(temp)
+	print (res)
+	return res
+	
 # Input : Two pairs of tuple coordinates
 def inRadius(first, second):
 	# Within 4th decimal coordinate
@@ -146,67 +146,74 @@ def inRadius(first, second):
 	else:
 		return False
 
+## Accommodate bearings with direction
 def motorController(bearing):
-	#going straight
-	## Accommodate bearings with direction
-	if bearing == 'NE':
+	if bearing == 'NE': #going straight
 		GPIO.output("P8_8", GPIO.HIGH)
 		GPIO.output("P8_9", GPIO.LOW)
 		GPIO.output("P8_11", GPIO.HIGH)
 		GPIO.output("P8_14", GPIO.HIGH)
+		
 	elif bearing == 'E': #turn left, 1 period
 		GPIO.output("P8_8", GPIO.HIGH)
 		GPIO.output("P8_9", GPIO.LOW)
 		GPIO.output("P8_11", GPIO.HIGH)
 		GPIO.output("P8_14", GPIO.LOW)
+		
 	elif bearing == 'SE': #turn left 2 periods
 		GPIO.output("P8_8", GPIO.HIGH)
 		GPIO.output("P8_9", GPIO.LOW)
 		GPIO.output("P8_11", GPIO.HIGH)
 		GPIO.output("P8_14", GPIO.LOW)
+		
 	elif bearing == 'S': #turn left 3 periods
 		GPIO.output("P8_8", GPIO.HIGH)
 		GPIO.output("P8_9", GPIO.LOW)
 		GPIO.output("P8_11", GPIO.HIGH)
 		GPIO.output("P8_14", GPIO.LOW)
+		
 	elif bearing == 'SW':#turn left 4 periods
 		GPIO.output("P8_8", GPIO.HIGH)
 		GPIO.output("P8_9", GPIO.LOW)
 		GPIO.output("P8_11", GPIO.HIGH)
 		GPIO.output("P8_14", GPIO.LOW)
+		
 	elif bearing == 'W': #turn right 3 periods
 		GPIO.output("P8_8", GPIO.HIGH)
 		GPIO.output("P8_9", GPIO.LOW)
 		GPIO.output("P8_11", GPIO.LOW)
 		GPIO.output("P8_14", GPIO.HIGH)
+		
 	elif bearing == 'NW':#turn right 2 periods
 		GPIO.output("P8_8", GPIO.HIGH)
 		GPIO.output("P8_9", GPIO.LOW)
 		GPIO.output("P8_11", GPIO.LOW)
 		GPIO.output("P8_14", GPIO.HIGH)
+		
 	elif bearing == 'N': #turn right 1 period
 		GPIO.output("P8_8", GPIO.HIGH)
 		GPIO.output("P8_9", GPIO.LOW)
 		GPIO.output("P8_11", GPIO.LOW)
 		GPIO.output("P8_14", GPIO.HIGH)
+		
 	else:
 		print ("ERROR, NO BEARING")
+	
 	sleep(5)
 
 # Haversine formula
 def haversine(lon1, lat1, lon2, lat2):
-
-    # convert decimal degrees to radians 
-    lon1, lat1, lon2, lat2 = map(radians, [lon1, lat1, lon2, lat2])
-    
-    # haversine formula 
-    dlon = lon2 - lon1 
-    dlat = lat2 - lat1 
-    
-    a = sin(dlat/2)**2 + cos(lat1) * cos(lat2) * sin(dlon/2)**2
-    c = 2 * asin(sqrt(a)) 
-    km = 6367 * c
-    return km
+	# convert decimal degrees to radians 
+	lon1, lat1, lon2, lat2 = map(radians, [lon1, lat1, lon2, lat2])
+	
+	# haversine formula 
+	dlon = lon2 - lon1 
+	dlat = lat2 - lat1 
+	
+	a = sin(dlat/2)**2 + cos(lat1) * cos(lat2) * sin(dlon/2)**2
+	c = 2 * asin(sqrt(a)) 
+	km = 6367 * c
+	return km
 
 #Credit to https://github.com/jeromer
 #"""
@@ -227,23 +234,38 @@ def haversine(lon1, lat1, lon2, lat2):
 #:Returns Type:
 #  float
 def calculate_initial_compass_bearing(pointA, pointB):
-    if (type(pointA) != tuple) or (type(pointB) != tuple):
-        raise TypeError("Only tuples are supported as arguments")
+	if (type(pointA) != tuple) or (type(pointB) != tuple):
+		raise TypeError("Only tuples are supported as arguments")
+	
+	lat1 = math.radians(float(pointA[0]))
+	lat2 = math.radians(float(pointB[0]))
+	
+	diffLong = math.radians(float(pointB[1])-float(pointA[1]))
+	
+	x = math.sin(diffLong) * math.cos(lat2)
+	y = math.cos(lat1)*math.sin(lat2)-(math.sin(lat1)*math.cos(lat2)*math.cos(diffLong))
+	
+	initial_bearing = math.atan2(x, y)
+	
+	# Now we have the initial bearing but math.atan2 return values
+	# from -180° to + 180° which is not what we want for a compass bearing
+	# The solution is to normalize the initial bearing as shown below
+	initial_bearing = math.degrees(initial_bearing)
+	compass_bearing = (initial_bearing + 360) % 360
+	return compass_bearing
 
-    lat1 = math.radians(float(pointA[0]))
-    lat2 = math.radians(float(pointB[0]))
+#Get degrees needed for angle A to align to angle B
+def get_angle(angle_A, angle_B):
+	theta = abs(angle_B-angle_A) % 360
+	sign = 1
+	
+	#Signed Angle
+	if not ((angle_A-angle_B >= 0 and angle_A-angle_B <= 180) or (angle_A-angle_B <= -180 and angle_A-angle_B >= -360)):
+		sign = -1
 
-    diffLong = math.radians(float(pointB[1])-float(pointA[1]))
-
-    x = math.sin(diffLong) * math.cos(lat2)
-    y = math.cos(lat1) * math.sin(lat2) - (math.sin(lat1)
-            * math.cos(lat2) * math.cos(diffLong))
-            
-    initial_bearing = math.atan2(x, y)
-    # Now we have the initial bearing but math.atan2 return values
-    # from -180° to + 180° which is not what we want for a compass bearing
-    # The solution is to normalize the initial bearing as shown below
-    initial_bearing = math.degrees(initial_bearing)
-    compass_bearing = (initial_bearing + 360) % 360
-
-    return compass_bearing
+	if theta > 180:
+		result = 360-theta
+	else:
+		result = theta
+	
+	return result*sign
