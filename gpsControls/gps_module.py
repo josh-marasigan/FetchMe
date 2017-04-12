@@ -4,21 +4,28 @@ import direction
 import Adafruit_BBIO.UART as UART
 from time import sleep
 from decimal import *
+
 #6 decimal points to represent coordinates
 getcontext().prec = 6
 
+#UART and Pyserial w/ 9600 BAUD Rate
 UART.setup("UART1")
 ser=serial.Serial('/dev/ttyO1',9600)
 
 ### Route going to Jester Entrance (PCL)
 route = [(30.284743, -97.736801),(30.284591, -97.737299),(30.284100, -97.737347),(30.283469, -97.737409),(30.282684, -97.737479)]
 temp2 = [(30.284535, -97.736424),(30.284591, -97.737299),(30.284100, -97.737347),(30.283469, -97.737409),(30.282684, -97.737479)]
+
 ### Reverse of T2 (Going back)
 route2 = temp2[::-1]
+
 ### Route going to Jester Entrance (Gregory)
 route3 = [(30.284535, -97.736424),(30.284591, -97.737299),(30.284100, -97.737347),(30.283469, -97.737409),(30.283411, -97.736777)]
+
 #Directions
 bearings = ["NE", "E", "SE", "S", "SW", "W", "NW", "N"]
+
+#Global Fields
 clock_cycle = 0
 route_index = 0
 
@@ -26,6 +33,7 @@ route_index = 0
 currentLat = "30.284743"
 currentLon = "-97.736801"
 
+#Main class for GPS navigation
 class GPS:
     def __init__(self):
         
@@ -185,4 +193,4 @@ while(1):
     print (route[route_index])
     print (len(route) - (route_index+1))
     sleep(1)
-
+    
