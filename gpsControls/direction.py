@@ -40,11 +40,15 @@ obsBR = False
 
 #Need to interface 5 sensors
 def is_obstruction():
+	#Analog read and time delay (Only front sensor)
 	value = ADC.read("P9_36")
+	sleep(.2)
+
 	#POLL FOR INTERRUPT, range is 0-1.65V
 	voltage = value * 1.8
 	if voltage > 1.6:
 		print ('Obstruction Detected')
+		obsC = True
 		return True
 	elif voltage < .3:
 		print ('No Obstruction')
@@ -52,10 +56,10 @@ def is_obstruction():
 	else:
 		print ('No Sensor Connection: Error')
 		return False
-	
+
 #Henry's Algorithm for obstacle avoidance
 def avoid_obstruction():
-	# Assert that correct movements according to obstructions
+	#Assert that correct movements according to obstructions
 	movements = []
 	
 	global obsL
@@ -64,9 +68,9 @@ def avoid_obstruction():
 	global obsBL
 	global obsBR
 	
+	#Poll analog ports to update obs variables/prevent lock
 	if obsC == True:
 		while obsC == True:
-			obsC = False
 			if obsR == False:
 				if obsBL == False:
 					bearing = 'SW'
@@ -87,7 +91,8 @@ def avoid_obstruction():
 						sleep(3)
 			else:
 				movements.append('None')
-		return movements
+	
+	return movements
 
 #Inputs: myGPS.latDeg, myGPS.latMin, myGPS.lonDeg, myGPS.lonMin
 #Outputs: Converted Coordinates in Radians
@@ -101,6 +106,7 @@ def useCoordinates(passed_coordinates):
     radian_list = [latDeg, latMin, lonDeg, lonMin]
     return radian_list
 
+#Get bearing from given degrees
 def bearings(brng):
     bearings = ["NE", "E", "SE", "S", "SW", "W", "NW", "N"]
     index = brng - 22.5
@@ -109,7 +115,7 @@ def bearings(brng):
     index = int(index / 45);
     return bearings[index]
 
-# algorithm for direction given old coordinate format
+#Algorithm for direction given old coordinate format
 def travel(past, current):
 	dLon = (current[2]+current[3]/60) - (past[2]+past[3]/60)
 	y = math.sin(dLon)*math.sin(current[0]+current[1]/60)
@@ -121,7 +127,7 @@ def travel(past, current):
 	res = bearings(temp)
 	print (res)
 	return res
-	
+
 # Input : Two pairs of tuple coordinates
 def inRadius(first, second):
 	# Within 4th decimal coordinate
@@ -146,7 +152,8 @@ def inRadius(first, second):
 	else:
 		return False
 
-## Accommodate bearings with direction
+#Accommodate bearings with direction. These ports will remain at specified state
+#until updated accordingly
 def motorController(bearing):
 	if bearing == 'NE': #going straight
 		GPIO.output("P8_8", GPIO.HIGH)
@@ -198,8 +205,6 @@ def motorController(bearing):
 		
 	else:
 		print ("ERROR, NO BEARING")
-	
-	sleep(5)
 
 # Haversine formula
 def haversine(lon1, lat1, lon2, lat2):

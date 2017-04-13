@@ -78,6 +78,7 @@ class GPS:
         self.fix=0
         ser.flushInput()
         ser.flushInput()
+        sleep(.4)
         
         #Poll serial port for gprmc or gpgga
         print ("Polling for serial A")
@@ -201,12 +202,6 @@ while(1):
     
     myGPS.read()
     if myGPS.fix!=0:
-        print ('Universal Time: ',myGPS.timeUTC)
-        print ('You are Tracking: ',myGPS.sats,' satellites')
-        print ('My Latitude: ',myGPS.latDeg, 'Degrees ', myGPS.latMin,' minutes ', myGPS.latHem)
-        print ('My Longitude: ',myGPS.lonDeg, 'Degrees ', myGPS.lonMin,' minutes ', myGPS.lonHem)
-        print ('My Speed: ', myGPS.knots)
-        print ('My Altitude: ',myGPS.altitude)
         print ('CURRENT LATITUDE COORDINATE',myGPS.currentLat)
         print ('CURRENT LONGITUDE COORDINATE',myGPS.currentLon)
     
@@ -214,7 +209,7 @@ while(1):
     if clock_cycle!=0:
         pastBearing = direction.calculate_initial_compass_bearing((myPastGPS.currentLat, myPastGPS.currentLon),(myGPS.currentLat,myGPS.currentLon))
     
-    #Set current GPS as "past GPS" 
+    #Set current GPS as "past GPS" to compare with current to target coordinate
     myPastGPS = myGPS
     
     #Consintually poll for obstruction
@@ -230,7 +225,7 @@ while(1):
         print (myGPS.currentLat)
         print (myGPS.currentLon)
         print ("GET COORDINATES POLL DONE")
-        sleep(.1)
+        
         latD = Decimal(myGPS.currentLat)
         lonD = Decimal(myGPS.currentLon)
         
@@ -258,9 +253,11 @@ while(1):
         print ('Current Moving Direction: ',newBearing)
         direction.motorController(newBearing)
     
-    # Current travel node
+    #Current travel node
     print ('Current Target Coordinate Node: ',route[route_index])
     print ('Number of Nodes Until Destination: ',len(route) - (route_index+1))
     clock_cycle = clock_cycle + 1
-    sleep(1)
+    
+    #Update navigation every .5 seconds
+    sleep(.5)
     
