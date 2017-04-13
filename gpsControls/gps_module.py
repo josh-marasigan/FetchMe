@@ -234,6 +234,8 @@ while(1):
         flip = True
     else:
         flip = False
+
+    #Continue to Blink Green LED until destination
     direction.heartbeat(flip)
     
     #Get current clock cycle (For turn timing)
