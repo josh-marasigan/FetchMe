@@ -5,6 +5,7 @@ import serial
 import math
 from math import radians, cos, sin, asin, sqrt
 from time import sleep
+from pythonled import pythonled
 
 ADC.setup()
 
@@ -31,6 +32,10 @@ GPIO.setup("P8_14", GPIO.OUT)
 #Directions
 directions = ["NE", "E", "SE", "S", "SW", "W", "NW", "N"]
 
+#Hearbeat
+user2 = pythonled(2)
+user3 = pythonled(3)
+
 #Obstacle detection Flags
 obsL = False
 obsC = False
@@ -43,7 +48,8 @@ def is_obstruction():
 	#Analog read and time delay (Only front sensor)
 	value = ADC.read("P9_36")
 	sleep(.2)
-
+	
+	
 	#POLL FOR INTERRUPT, range is 0-1.65V
 	voltage = value * 1.8
 	if voltage > 1.6:
@@ -54,7 +60,7 @@ def is_obstruction():
 		print ('No Obstruction')
 		return False
 	else:
-		print ('No Sensor Connection: Error')
+		#print ('No Sensor Connection: Error')
 		return False
 
 #Henry's Algorithm for obstacle avoidance
@@ -272,3 +278,14 @@ def get_angle(angle_A, angle_B):
 		result = theta
 	
 	return result*sign
+	
+#Simple Heartbeat
+def heartbeat(flip):
+	#Toggle
+	if flip:
+		user2.on()
+		user3.on()
+	
+	else:
+		user2.off()
+		user2.off()

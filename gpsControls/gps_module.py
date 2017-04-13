@@ -32,6 +32,9 @@ route_index = 0
 finishProgram = False
 found_obstruction = False
 
+#Event flags
+flip = False
+
 #Global Bearings
 currentBearing = "X"
 pastBearing = "X"
@@ -226,6 +229,13 @@ myPastGPS=GPS()
 backgroundObstructionThread = BackgroundThread()
 
 while(1):
+    #LED Heartbeat
+    if clock_cycle%2==0:
+        flip = True
+    else:
+        flip = False
+    direction.heartbeat(flip)
+    
     #Get current clock cycle (For turn timing)
     print ("Iteration Count: " + str(clock_cycle))
     
