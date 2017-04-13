@@ -44,3 +44,8 @@ git remote set-url origin <whatever.git>
 
 Check Current Version of Repository (HEAD)
 git log -1
+
+Move File to Directory in local Repo
+mkdir dir_name
+git mv hello.html dir_name
+git status
