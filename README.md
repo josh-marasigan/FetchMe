@@ -11,13 +11,45 @@ Driver-less cars are an emerging technology which has the potential to impact ma
 
 With the help of our industry sponsor, Texas Instruments, and our faculty mentor, Dr. David Pan, we hope to make UT Austin the first university in the world to have autonomous delivery for its students!
 
-## Website
+## Design Overview and GPIO Ports
+<p align="center">
+  <strong>Top Level Block Diagram</strong><br>
+  <img width="400" height="300" src="http://tinyimg.io/i/FkfJGkR.PNG"><br>
+</p><br><br>
+
+<strong>GPIO (BeagleBone) to Motor Control</strong><br>
+<b>P8_8</b>: Rear Motor (Forward)<br>
+<b>P8_9</b>: Rear Motor (Reverse)<br>
+<b>P8_11</b>: Front Motor (Turns Left)<br>
+<b>P8_14</b>: Front Motor (Turns Right)<br>
+
+<strong>GPIO (MSP430) to Ulstrasonic Sensor Control (BeagleBone)</strong><br>
+<i>BeagleBone Input</i><br>
+<b>P8_6</b>: Front Sensor<br>
+<b>P8_7</b>: Right Sensor<br>
+<b>P8_12</b>: Left Sensor<br>
+<b>P8_13</b>: Back Sensor<br>
+
+<b><i>MSP430 Output</i></b><br>
+<b>P1.1</b>: Obstruction Flag (High when F/R/L/B Sensor Echo returns High)<br>
+
+<i>MSP430 Input from 'ECHO' Sensor Pin</i><br>
+<b>P1.2</b>: Front Sensor<br>
+<b>P1.4</b>: Right Sensor<br>
+<b>P1.7</b>: Left Sensor<br>
+<b>P1.7</b>: Back Sensor<br>
+
+<strong>GPIO for Heartbeats</strong><br>
+<b>P8_44</b><br>
+<b>USR2</b><br>
+<b>USR3</b><br>
+<br>
+
+## Follow Our Blog!
 https://autonomousdesignproject.wordpress.com/
 
 ## Contributers
-
 <p>
-<u><b>Name/LinkedIn - Technical Expertise</b></u><br><br>
 <b>Erik Gill</b> - Communication Networks and Integrated Circuits <br>
   <a href="https://www.linkedin.com/in/john-nam-a8a629116/" style="text-decoration: none">
   <b>John Nam</b></a> - Energy Systems and Renewable Energy<br>
