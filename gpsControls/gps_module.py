@@ -201,18 +201,20 @@ class BackgroundThread(object):
         :param interval: Check interval, in seconds
         """
         self.interval = interval
-        thread = threading.Thread(target=self.run, args=())
+        thread = Thread(target=self.run, args=())
         thread.daemon = True
         thread.start()
+        print ("BACKGROUND THREAD INITIALIZED")
 
     def run(self):
         #Until the var has arrived, keep polling for obstructions
+        print ("BACKGROUND THREAD RUNNING")
         while finishProgram==False:
             #Insert Obstacle Avoidance Poll
             found_obstruction = direction.is_obstruction()
 
             #Keep Polling
-            time.sleep(self.interval)
+            sleep(self.interval)
 
 #Class for current car location
 myGPS=GPS()
