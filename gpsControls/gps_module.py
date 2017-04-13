@@ -215,6 +215,7 @@ class BackgroundThread(object):
         while finishProgram==False:
             #Insert Obstacle Avoidance Poll
             found_obstruction = direction.is_obstruction()
+            direction.avoid_obstruction()
 
             #Keep Polling
             sleep(self.interval)
@@ -260,7 +261,8 @@ while(1):
     if found_obstruction:
         while found_obstruction:
             #Perform obstacle avoidance until sensors are cleared
-            direction.avoid_obstruction()
+            sleep(1)
+            #Wait until background thread finishes
     
     #Get next node in path
     if myGPS.fix!=0:

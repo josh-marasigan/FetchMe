@@ -1,0 +1,14 @@
+[Unit]
+Description=python autorun
+
+[Service]
+WorkingDirectory=/home/debian/
+ExecStart=sudo python gps_module.py
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=node
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
