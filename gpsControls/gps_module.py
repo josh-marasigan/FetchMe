@@ -2,6 +2,7 @@
 import serial
 import direction
 import Adafruit_BBIO.UART as UART
+from threading import Thread
 from time import sleep
 from decimal import *
 
@@ -26,6 +27,10 @@ route3 = [(30.284535, -97.736424),(30.284591, -97.737299),(30.284100, -97.737347
 bearings = ["NE", "E", "SE", "S", "SW", "W", "NW", "N"]
 clock_cycle = 0
 route_index = 0
+
+#Flag to kill multithreads
+finishProgram = False
+found_obstruction = False
 
 #Global Bearings
 currentBearing = "X"
@@ -187,11 +192,36 @@ class GPS:
             self.sats=NMEA2_array[7]
             print ("...PASSED GPGGA PARSE")
 
+#Class for background thread polling obstructions
+class BackgroundThread(object):
+
+    def __init__(self, interval=.2):
+        """ Constructor
+        :type interval: int
+        :param interval: Check interval, in seconds
+        """
+        self.interval = interval
+        thread = threading.Thread(target=self.run, args=())
+        thread.daemon = True
+        thread.start()
+
+    def run(self):
+        #Until the var has arrived, keep polling for obstructions
+        while finishProgram==False:
+            #Insert Obstacle Avoidance Poll
+            found_obstruction = direction.is_obstruction()
+
+            #Keep Polling
+            time.sleep(self.interval)
+
 #Class for current car location
 myGPS=GPS()
 
 #Last known GPS coordinates
 myPastGPS=GPS()
+
+#Multithread for collision avoidance loop
+backgroundObstructionThread = BackgroundThread()
 
 while(1):
     #Get current clock cycle (For turn timing)
@@ -211,13 +241,12 @@ while(1):
     
     #Set current GPS as "past GPS" to compare with current to target coordinate
     myPastGPS = myGPS
-    
-    #Consintually poll for obstruction
-    found_obstruction = direction.is_obstruction()
-    
+
     #Obstruction found
     if found_obstruction:
-        direction.avoid_obstruction()
+        while found_obstruction:
+            #Perform obstacle avoidance until sensors are cleared
+            direction.avoid_obstruction()
     
     #Get next node in path
     if myGPS.fix!=0:
@@ -232,6 +261,10 @@ while(1):
         if direction.inRadius((latD,lonD),route[route_index]):
             if route_index == len(route)-1:
                 print ('ARRIVED')
+                finishProgram = True
+
+                #Exit thread
+                break
             else:
                 route_index = route_index + 1
         

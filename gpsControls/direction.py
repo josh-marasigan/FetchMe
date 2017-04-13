@@ -60,8 +60,6 @@ def is_obstruction():
 #Henry's Algorithm for obstacle avoidance
 def avoid_obstruction():
 	#Assert that correct movements according to obstructions
-	movements = []
-	
 	global obsL
 	global obsC
 	global obsR
@@ -72,27 +70,27 @@ def avoid_obstruction():
 	if obsC == True:
 		while obsC == True:
 			if obsR == False:
+				
 				if obsBL == False:
 					bearing = 'SW'
-					movements.append('SW')
 					sleep(1)
+					
 					if obsC == False:
 						bearing = 'N'
-						movements.append('N')
 						sleep(3)
+			
 			elif obsR == True and obsL == False:
+				
 				if obsBR == False:
 					bearing = 'SE'
-					movements.append('SE')
 					sleep(1)
+					
 					if obsC == False:
 						bearing = 'N'
-						movements.append('N')
 						sleep(3)
+			
 			else:
-				movements.append('None')
-	
-	return movements
+				print ("No Obstruction")
 
 #Inputs: myGPS.latDeg, myGPS.latMin, myGPS.lonDeg, myGPS.lonMin
 #Outputs: Converted Coordinates in Radians
