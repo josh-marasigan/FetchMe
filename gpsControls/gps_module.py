@@ -242,8 +242,10 @@ while(1):
     #Gather location data
     print ('POLLING FOR GPA COORDINATES')
     
-    #Update GPS class fields. New Coordinates in cache
     myGPS.read()
+    if myGPS.fix!=0:
+        print ('CURRENT LATITUDE COORDINATE',myGPS.currentLat)
+        print ('CURRENT LONGITUDE COORDINATE',myGPS.currentLon)
     
     #Calculate the car's heading traveled between the GPS polls
     if clock_cycle!=0:
@@ -261,8 +263,8 @@ while(1):
     #Get next node in path
     if myGPS.fix!=0:
         print ("GET COORDINATES POLL")
-        print ('CURRENT LATITUDE COORDINATE: ',myGPS.currentLat)
-        print ('CURRENT LONGITUDE COORDINATE: ',myGPS.currentLon)
+        print (myGPS.currentLat)
+        print (myGPS.currentLon)
         print ("GET COORDINATES POLL DONE")
         
         latD = Decimal(myGPS.currentLat)

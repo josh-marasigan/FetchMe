@@ -29,12 +29,15 @@ GPIO.setup("P8_9", GPIO.OUT)
 GPIO.setup("P8_11", GPIO.OUT)
 GPIO.setup("P8_14", GPIO.OUT)
 
-#Directions
-directions = ["NE", "E", "SE", "S", "SW", "W", "NW", "N"]
-
-#Hearbeat
+#Hearbeat. 2 USR, 1 LED
+GPIO.setup("P8_44", GPIO.OUT)
 user2 = pythonled(2)
 user3 = pythonled(3)
+user2.off()
+user3.off()
+
+#Directions
+directions = ["NE", "E", "SE", "S", "SW", "W", "NW", "N"]
 
 #Obstacle detection Flags
 obsL = False
@@ -285,7 +288,9 @@ def heartbeat(flip):
 	if flip:
 		user2.on()
 		user3.on()
+		GPIO.output("P8_44", GPIO.HIGH)
 	
 	else:
 		user2.off()
-		user2.off()
+		user3.off()
+		GPIO.output("P8_44", GPIO.LOW)

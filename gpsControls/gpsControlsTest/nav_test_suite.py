@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import unittest
 #import from parent directory
 #import gps_module
