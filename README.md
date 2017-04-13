@@ -14,7 +14,7 @@ With the help of our industry sponsor, Texas Instruments, and our faculty mentor
 ## Design Overview and GPIO Ports
 <p align="center">
   <strong>Top Level Block Diagram</strong><br>
-  <img width="400" height="300" src="http://tinyimg.io/i/FkfJGkR.PNG"><br>
+  <img width="800" height="600" src="http://tinyimg.io/i/FkfJGkR.PNG"><br>
 </p><br><br>
 
 <strong>GPIO (BeagleBone) to Motor Control</strong><br>
