@@ -257,12 +257,14 @@ while(1):
     #Set current GPS as "past GPS" to compare with current to target coordinate
     myPastGPS = myGPS
 
+    '''
     #Obstruction found
     if found_obstruction:
         while found_obstruction:
             #Perform obstacle avoidance until sensors are cleared
             sleep(1)
             #Wait until background thread finishes
+    '''
     
     #Get next node in path
     if myGPS.fix!=0:
