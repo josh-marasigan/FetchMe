@@ -86,51 +86,25 @@ class GPS:
         #ser.write(GPRMC_GPGGA)
         #sleep(1)
         #ser.flushInput()
-        #ser.flushInput()
+        ser.flushInput()
         print ("GPS Initialized")
     
-    
     def read(self):
-        
         #Fix will be overriden if satellites acquired. '0' otherwise to prevent lock
         self.fix=0
         ser.flushInput()
         ser.flushInput()
         sleep(.4)
         
-        #Motor Test
-        #Motor Test
-        #Motor Test
-        #Motor Test
-        print ("CAR SHOULD BE MOVING")
-        direction.motorController('E')
-        
         #Poll serial port for gprmc or gpgga
-        print ("Polling for serial A")
-        '''
-        while ser.inWaiting()==0:
-                pass
-        print ("Done Polling for A")
-        print ("wat")
-        print (ser.readline())
-        NMEA = ser.readline()
-        print NMEA
-        '''
+        print "Polling for serial A..."
         sleep(.5)
         NMEA1_global = getGPS.poll()
         print (NMEA1_global)
         self.NMEA1=NMEA1_global
         
         #Poll serial port for gprmc or gpgga
-        print ("Polling for serial B")
-        '''
-        while ser.inWaiting()==0:
-                pass
-        
-        print ("Done Polling for B")
-        self.NMEA2=ser.readline()
-        print (self.NMEA2)
-        '''
+        print "Polling for serial B..."
         sleep(.5)
         NMEA2_global = getGPS.poll()
         confirmNMEA2 = NMEA2_global.split(',')
@@ -142,35 +116,8 @@ class GPS:
         NMEA1_array=self.NMEA1.split(',')
         NMEA2_array=self.NMEA2.split(',')
         
-        # Default Values for testing
-        '''
-        print ("Parsed Coordinate Input")
-        self.timeUTC='12:00'
-        self.latDeg='9999.9'
-        currentLat = self.latDeg
-        self.latMin='-1'
-        self.latHem='-1'
-        self.lonDeg='9999.9'
-        currentLon = self.lonDeg
-        self.lonMin='-1'
-        self.lonHem='-1'
-        self.knots='0'
-        self.altitude='0'
-        self.sats='0'
-        '''
-        
-        # Testing Purposes
-        '''
-        gprmcTest = '$GPRMC,204756.000,A,3017.3548,N,09744.1552,W,0.01,256.62,150217,,,D*7D'
-        gpggaTest = '$GPGGA,204755.000,3017.3548,N,09744.1552,W,2,07,1.18,222.6,M,-22.5,M,0000,0000*5D'
-        NMEA1_array = gprmcTest.split(',')
-        NMEA2_array = gpggaTest.split(',')
-        for i in NMEA1_array:
-            print (i)
-        '''
-        
         if NMEA1_array[0]=='$GPRMC':
-            print ("GPRMC PARSE START...")
+            
             self.timeUTC=NMEA1_array[1][:-8]+':'+NMEA1_array[1][-8:-6]+':'+NMEA1_array[1][-6:-4]
             self.latDeg=NMEA1_array[3][:-7]
             
@@ -190,17 +137,15 @@ class GPS:
             self.lonMin=NMEA1_array[5][-7:]
             self.lonHem=NMEA1_array[6]
             self.knots=NMEA1_array[7]
-            print ("...PASSED GPRMC PARSE")
             
         if NMEA1_array[0]=='$GPGGA':
-            print ("GPGGA PARSE START...")
+            
             self.fix=NMEA1_array[6]
             self.altitude=NMEA1_array[9]
             self.sats=NMEA1_array[7]
-            print ("...PASSED GPGGA PARSE")
-            
+        
         if NMEA2_array[0]=='$GPRMC':
-            print ("GPRMC PARSE START...")
+            
             self.timeUTC=NMEA2_array[1][:-8]+':'+NMEA1_array[1][-8:-6]+':'+NMEA1_array[1][-6:-4]
             self.latDeg=NMEA2_array[3][:-7]
             
@@ -220,14 +165,11 @@ class GPS:
             self.lonMin=NMEA2_array[5][-7:]
             self.lonHem=NMEA2_array[6]
             self.knots=NMEA2_array[7]
-            print ("...PASSED GPRMC PARSE")
             
         if NMEA2_array[0]=='$GPGGA':
-            print ("GPGGA PARSE START...")
             self.fix=NMEA2_array[6]
             self.altitude=NMEA2_array[9]
             self.sats=NMEA2_array[7]
-            print ("...PASSED GPGGA PARSE")
 
 #Class for background thread polling obstructions
 class BackgroundThread(object):
@@ -291,15 +233,9 @@ while(1):
     direction.heartbeat(flip)
     
     #Get current clock cycle (For turn timing)
-    print ("Iteration Count: " + str(clock_cycle))
-    
-    #Gather location data
-    print ('POLLING FOR GPA COORDINATES')
-    
-    myGPS.read()
-    if myGPS.fix!=0:
-        print ('CURRENT LATITUDE COORDINATE',myGPS.currentLat)
-        print ('CURRENT LONGITUDE COORDINATE',myGPS.currentLon)
+    print ""
+    print "Iteration Count: " + str(clock_cycle)
+    print ""
     
     #Calculate the car's heading traveled between the GPS polls
     if clock_cycle!=0:
@@ -309,6 +245,7 @@ while(1):
     myPastGPS = myGPS
     
     #Obstruction found, pause thread until dealt with
+    
     #if found_obstruction:
     if False:
         while found_obstruction:
@@ -317,11 +254,12 @@ while(1):
             #Wait until background thread finishes
     
     #Get next node in path
+    myGPS.read()
     if myGPS.fix!=0:
-        print ("GET COORDINATES POLL")
-        print (myGPS.currentLat)
-        print (myGPS.currentLon)
-        print ("GET COORDINATES POLL DONE")
+        print("")
+        print ("Current Latitude... ",myGPS.currentLat)
+        print ("Current Longitude...",myGPS.currentLon)
+        print("")
         
         latD = Decimal(myGPS.currentLat)
         lonD = Decimal(myGPS.currentLon)
@@ -330,7 +268,6 @@ while(1):
             if route_index == len(route)-1:
                 print ('ARRIVED')
                 finishProgram = True
-
                 #Exit thread
                 break
             else:
@@ -339,24 +276,28 @@ while(1):
         #Bearing in terms of CURRENT LOCATION towards NEXT TARGET NODE
         target_node = route[route_index]
         currentBearing = direction.calculate_initial_compass_bearing((myGPS.currentLat,myGPS.currentLon),(target_node[0],target_node[1]))
-        print ('Bearing in Degrees: ',currentBearing)
-
+        print ""
+        print 'Current Bearing in Degrees... ',currentBearing
+        
         #Bearing in terms of CURRENT LOCATION from PAST LOCATION
         past_node = (myPastGPS.currentLat,myPastGPS.currentLon)
         prevBearing = direction.calculate_initial_compass_bearing((past_node[0],past_node[1]),(myGPS.currentLat,myGPS.currentLon))
-        print ('Bearing in Degrees: ',prevBearing)
+        print("")
+        print 'Past Bearing in Degrees... ',prevBearing
         
         #Does the car need to turn left or right to adjust course?
         turnAngle = direction.get_angle(currentBearing, prevBearing)
         newBearing = direction.bearings(turnAngle)
         
         #Perform actual car movement
-        print ('Current Moving Direction: ',newBearing)
+        print ""
+        print 'Current Moving Direction... ',newBearing
         direction.motorController(newBearing)
     
     #Current travel node
-    print ('Current Target Coordinate Node: ',route[route_index])
-    print ('Number of Nodes Until Destination: ',len(route) - (route_index+1))
+    print ""
+    print 'Current Target Coordinate Node: ',route[route_index]
+    print 'Number of Nodes Until Destination: ',len(route) - (route_index+1)
     clock_cycle = clock_cycle + 1
     
     #Update navigation every .5 seconds

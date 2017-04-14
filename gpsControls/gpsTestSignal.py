@@ -11,14 +11,11 @@ def poll():
     global isGPRMC
     global isGPGGA
     while isGPRMC==False and isGPGGA==False:
-        print ("Start GPS Poll")
         while GPS.inWaiting()==0:
                 pass
         
         NMEA=GPS.readline()
-        sleep(1)
-        #print NMEA
-        print ("NMEA")
+        sleep(.1)
         
         splitNM = NMEA.split(',')
         if splitNM[0]=='$GPRMC':
@@ -26,9 +23,8 @@ def poll():
         
         if splitNM[0]=='$GPGGA':
             isGPGGA=True
-        sleep(1)
+        sleep(.1)
     
-    print ('Break')
     isGPRMC=False
     isGPGGA=False
     return NMEA
