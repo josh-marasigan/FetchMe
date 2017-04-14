@@ -40,7 +40,7 @@ found_obstruction = False
 flip = False
 
 #Global Bearings
-currentBearing = "X"
+newBearing = "X"
 pastBearing = "X"
 NMEA1_global = ""
 NMEA2_global = ""
@@ -171,9 +171,28 @@ class GPS:
             self.altitude=NMEA2_array[9]
             self.sats=NMEA2_array[7]
 
+#Class for background thread running motor
+class MotorThread(object):
+    def __init__(self, interval=.2):
+        """ Constructor
+        :type interval: int
+        :param interval: Check interval, in seconds
+        """
+        self.interval = interval
+        
+        #Thread for motor control continuous
+        thread = Thread(target=self.run, args=())
+        thread.daemon = True
+        thread.start()
+    
+    def run(self):
+        print ("BACKGROUND MOTOR THREAD RUNNING")
+        while finishProgram==False:
+            direction.alwaysRun(newBearing)
+            sleep(self.interval)
+
 #Class for background thread polling obstructions
 class BackgroundThread(object):
-
     def __init__(self, interval=.2):
         """ Constructor
         :type interval: int
@@ -185,12 +204,10 @@ class BackgroundThread(object):
         thread = Thread(target=self.run, args=())
         thread.daemon = True
         thread.start()
-        
-        print ("BACKGROUND THREAD INITIALIZED")
-
+    
     def run(self):
         #Until the var has arrived, keep polling for obstructions
-        print ("BACKGROUND THREAD RUNNING")
+        print ("BACKGROUND SENSORS THREAD RUNNING")
         while finishProgram==False:
             #Insert Obstacle Avoidance Poll, set global flag true
             found_obstruction = direction.is_obstruction()
@@ -204,10 +221,6 @@ class BackgroundThread(object):
                 actUpon.daemon = True
                 actUpon.start()
                 '''
-                #print ("DETECTED")
-                #actUpon.exit()
-                #just in case
-            
             #Keep Polling
             sleep(self.interval)
 
@@ -217,7 +230,8 @@ myGPS=GPS()
 #Last known GPS coordinates
 myPastGPS=GPS()
 
-#Multithread for collision avoidance loop
+#Multithread for collision avoidance loop and motor
+motorMovementThread = MotorThread()
 backgroundObstructionThread = BackgroundThread()
 
 #Test Route for debug only
@@ -287,12 +301,13 @@ while(1):
         
         #Does the car need to turn left or right to adjust course?
         turnAngle = direction.get_angle(currentBearing, prevBearing)
+        pastBearing = currentBearing
         newBearing = direction.bearings(turnAngle)
         
         #Perform actual car movement
         print ""
         print 'Current Moving Direction... ',newBearing
-        direction.motorController(newBearing)
+        #direction.motorController(newBearing)
     
     #Current travel node
     print ""
@@ -301,5 +316,5 @@ while(1):
     clock_cycle = clock_cycle + 1
     
     #Update navigation every .5 seconds
-    sleep(.5)
+    sleep(3)
     

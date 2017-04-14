@@ -218,12 +218,17 @@ def inRadius(first, second):
 	else:
 		return False
 
+#Perpetually call this to keep motor running at all time
+#Dedicate and run a new single thread for this function
+def alwaysRun(bearing):
+	if bearing!="X":
+		motorController(bearing)
+
 #Accommodate bearings with direction. These ports will remain at specified state
 #until updated accordingly
 #Make a thread for perpetually running the car
 def motorController(bearing):
 	if bearing == 'N': #going straight
-		print ("Heading STRAIGHT")
 		#Corrected
 		GPIO.output("P8_8", GPIO.HIGH)
 		GPIO.output("P8_9", GPIO.LOW)
