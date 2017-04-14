@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import serial
 import direction
+import gpsTestSignal as getGPS
 import Adafruit_BBIO.UART as UART
 from threading import Thread
 from time import sleep
@@ -41,13 +42,15 @@ flip = False
 #Global Bearings
 currentBearing = "X"
 pastBearing = "X"
+NMEA1_global = ""
+NMEA2_global = ""
 
 class GPS:
+    #Global Current Latitude and Longitude
+    currentLat = "99.999999"
+    currentLon = "-99.999999"
+    
     def __init__(self):
-        
-        #Global Current Latitude and Longitude
-        currentLat = "99.999999"
-        currentLon = "-99.999999"
         
         #This sets up variables for useful commands.
         #This set is used to set the rate the GPS reports
@@ -67,6 +70,7 @@ class GPS:
         BAUD_9600 ="$PMTK251,9600*17\r\n"             #Set 9600 Baud Rate
         
         #Commands for which NMEA Sentences are sent
+        '''
         ser.write(BAUD_9600)
         sleep(1)
         ser.baudrate=57600
@@ -78,34 +82,61 @@ class GPS:
         sleep(1)
         ser.write(MEAS_1_sec)
         sleep(1)
-        ser.write(GPRMC_GPGGA)
-        sleep(1)
-        ser.flushInput()
-        ser.flushInput()
+        '''
+        #ser.write(GPRMC_GPGGA)
+        #sleep(1)
+        #ser.flushInput()
+        #ser.flushInput()
         print ("GPS Initialized")
-        
+    
+    
     def read(self):
+        
         #Fix will be overriden if satellites acquired. '0' otherwise to prevent lock
         self.fix=0
         ser.flushInput()
         ser.flushInput()
         sleep(.4)
         
+        #Motor Test
+        #Motor Test
+        #Motor Test
+        #Motor Test
+        print ("CAR SHOULD BE MOVING")
+        direction.motorController('E')
+        
         #Poll serial port for gprmc or gpgga
         print ("Polling for serial A")
+        '''
         while ser.inWaiting()==0:
-            pass
-        
+                pass
         print ("Done Polling for A")
-        self.NMEA1=ser.readline()
+        print ("wat")
+        print (ser.readline())
+        NMEA = ser.readline()
+        print NMEA
+        '''
+        sleep(.5)
+        NMEA1_global = getGPS.poll()
+        print (NMEA1_global)
+        self.NMEA1=NMEA1_global
         
         #Poll serial port for gprmc or gpgga
         print ("Polling for serial B")
+        '''
         while ser.inWaiting()==0:
-            pass
+                pass
         
         print ("Done Polling for B")
         self.NMEA2=ser.readline()
+        print (self.NMEA2)
+        '''
+        sleep(.5)
+        NMEA2_global = getGPS.poll()
+        confirmNMEA2 = NMEA2_global.split(',')
+        
+        print (NMEA2_global)
+        self.NMEA2=NMEA2_global
         
         #While condition ensures NMEA1 or 2 is not empty
         NMEA1_array=self.NMEA1.split(',')
@@ -225,11 +256,13 @@ class BackgroundThread(object):
             #Act upon detection
             if found_obstruction:
                 #Thread for avoidance action
+                '''
                 actUpon = Thread(target=direction.avoid_obstruction(), args=())
                 print("Obstruction Avoidance Start...") 
                 actUpon.daemon = True
                 actUpon.start()
-                
+                '''
+                #print ("DETECTED")
                 #actUpon.exit()
                 #just in case
             
@@ -276,7 +309,8 @@ while(1):
     myPastGPS = myGPS
     
     #Obstruction found, pause thread until dealt with
-    if found_obstruction:
+    #if found_obstruction:
+    if False:
         while found_obstruction:
             #Perform obstacle avoidance until sensors are cleared
             sleep(1)

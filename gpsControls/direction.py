@@ -79,48 +79,42 @@ def is_obstruction():
 	voltArr = [voltage,voltRight,voltLeft,voltBack]
 	count = 0
 	for v in voltArr:
-		print (v)
+		#print (v)
 		if v > 1.6:
 			sensorFlag=True
-
 			#Poll which sensor went off
 			if count==0:
 				obsC=True
-			
 			elif count==1:
 				obsR=True
-
 			elif count==2:
 				obsL=True
-			
 			elif count==3:
 				obsB=True
 		else:
 			if count==0:
 				obsC=False
-
 			elif count==1:
 				obsR=False
-
 			elif count==2:
 				obsL=False
-
 			elif count==3:
 				obsB=False
-
 		#increment
 		count = count+1
 	
+	return sensorFlag
+	'''
 	#Send boolean back
 	if sensorFlag:
-		print ('Obstruction Detected')
+		#print ('Obstruction Detected')
 		return True
 	
 	else:
-		print ('No Obstruction')
+		#print ('No Obstruction')
 		#print ('No Sensor Connection: Error')
 		return False
-
+	'''
 #Henry's Algorithm for obstacle avoidance
 def avoid_obstruction():
 	#Assert that correct movements according to obstructions
@@ -226,12 +220,15 @@ def inRadius(first, second):
 
 #Accommodate bearings with direction. These ports will remain at specified state
 #until updated accordingly
+#Make a thread for perpetually running the car
 def motorController(bearing):
 	if bearing == 'N': #going straight
+		print ("Heading STRAIGHT")
+		#Corrected
 		GPIO.output("P8_8", GPIO.HIGH)
 		GPIO.output("P8_9", GPIO.LOW)
-		GPIO.output("P8_11", GPIO.HIGH)
-		GPIO.output("P8_14", GPIO.HIGH)
+		GPIO.output("P8_11", GPIO.LOW)
+		GPIO.output("P8_14", GPIO.LOW)
 		
 	elif bearing == 'E': #turn left, 1 period
 		GPIO.output("P8_8", GPIO.HIGH)
@@ -246,28 +243,28 @@ def motorController(bearing):
 		GPIO.output("P8_14", GPIO.LOW)
 		
 	elif bearing == 'S': #turn left 3 periods
-		GPIO.output("P8_8", GPIO.HIGH)
-		GPIO.output("P8_9", GPIO.LOW)
-		GPIO.output("P8_11", GPIO.HIGH)
+		GPIO.output("P8_8", GPIO.LOW)
+		GPIO.output("P8_9", GPIO.HIGH)
+		GPIO.output("P8_11", GPIO.LOW)
 		GPIO.output("P8_14", GPIO.LOW)
 		
 	elif bearing == 'SW':#turn left 4 periods
-		GPIO.output("P8_8", GPIO.HIGH)
-		GPIO.output("P8_9", GPIO.LOW)
-		GPIO.output("P8_11", GPIO.HIGH)
-		GPIO.output("P8_14", GPIO.LOW)
+		GPIO.output("P8_8", GPIO.LOW)
+		GPIO.output("P8_9", GPIO.HIGH)
+		GPIO.output("P8_11", GPIO.LOW)
+		GPIO.output("P8_14", GPIO.HIGH)
 		
 	elif bearing == 'W': #turn right 3 periods
 		GPIO.output("P8_8", GPIO.HIGH)
 		GPIO.output("P8_9", GPIO.LOW)
-		GPIO.output("P8_11", GPIO.LOW)
-		GPIO.output("P8_14", GPIO.HIGH)
+		GPIO.output("P8_11", GPIO.HIGH)
+		GPIO.output("P8_14", GPIO.LOW)
 		
 	elif bearing == 'NW':#turn right 2 periods
 		GPIO.output("P8_8", GPIO.HIGH)
 		GPIO.output("P8_9", GPIO.LOW)
-		GPIO.output("P8_11", GPIO.LOW)
-		GPIO.output("P8_14", GPIO.HIGH)
+		GPIO.output("P8_11", GPIO.HIGH)
+		GPIO.output("P8_14", GPIO.LOW)
 		
 	elif bearing == 'NE': #turn right 1 period
 		GPIO.output("P8_8", GPIO.HIGH)
