@@ -98,19 +98,19 @@ class GPS:
         sleep(.4)
         
         #Poll serial port for gprmc or gpgga
-        print "Polling for serial A..."
+        #print "Polling for serial A..."
         sleep(.5)
         NMEA1_global = getGPS.poll()
-        print (NMEA1_global)
+        #print (NMEA1_global)
         self.NMEA1=NMEA1_global
         
         #Poll serial port for gprmc or gpgga
-        print "Polling for serial B..."
+        #print "Polling for serial B..."
         sleep(.5)
         NMEA2_global = getGPS.poll()
         confirmNMEA2 = NMEA2_global.split(',')
         
-        print (NMEA2_global)
+        #print (NMEA2_global)
         self.NMEA2=NMEA2_global
         
         #While condition ensures NMEA1 or 2 is not empty
@@ -210,18 +210,25 @@ class BackgroundThread(object):
         #Until the var has arrived, keep polling for obstructions
         print ("BACKGROUND SENSORS THREAD RUNNING")
         while finishProgram==False:
+            print "POLL OBSTRUCTION"
             #Insert Obstacle Avoidance Poll, set global flag true
+            
+            #direction.wait_pin_change(direction.is_obstruction())
+            direction.wait_pin_change()
             found_obstruction = direction.is_obstruction()
             
             #Act upon detection
             if found_obstruction:
+                print "Obstruction Found..."
+                
                 #Thread for avoidance action
-                '''
                 actUpon = Thread(target=direction.avoid_obstruction(), args=())
-                print("Obstruction Avoidance Start...") 
                 actUpon.daemon = True
                 actUpon.start()
-                '''
+            
+            else:
+                print "Obstruction Not Found..."
+            
             #Keep Polling
             sleep(self.interval)
 
@@ -248,9 +255,11 @@ while(1):
     direction.heartbeat(flip)
     
     #Get current clock cycle (For turn timing)
+    '''
     print ""
     print "Iteration Count: " + str(clock_cycle)
     print ""
+    '''
     
     #Calculate the car's heading traveled between the GPS polls
     if clock_cycle!=0:
@@ -271,10 +280,18 @@ while(1):
     #Get next node in path
     myGPS.read()
     if myGPS.fix!=0:
+        '''
         print("")
         print ("Current Latitude... ",myGPS.currentLat)
         print ("Current Longitude...",myGPS.currentLon)
         print("")
+        '''
+        
+        if myGPS.currentLat=='.':
+            myGPS.currentLat='0.0'
+        
+        if myGPS.currentLon=='-.':
+            myGPS.currentLon='0.0'
         
         latD = Decimal(myGPS.currentLat)
         lonD = Decimal(myGPS.currentLon)
@@ -291,29 +308,33 @@ while(1):
         #Bearing in terms of CURRENT LOCATION towards NEXT TARGET NODE
         target_node = route[route_index]
         currentBearing = direction.calculate_initial_compass_bearing((myGPS.currentLat,myGPS.currentLon),(target_node[0],target_node[1]))
+        '''
         print ""
         print 'Current Bearing in Degrees... ',currentBearing
-        
+        '''
         #Bearing in terms of CURRENT LOCATION from PAST LOCATION
         past_node = (myPastGPS.currentLat,myPastGPS.currentLon)
         prevBearing = direction.calculate_initial_compass_bearing((past_node[0],past_node[1]),(myGPS.currentLat,myGPS.currentLon))
+        '''
         print("")
         print 'Past Bearing in Degrees... ',prevBearing
-        
+        '''
         #Does the car need to turn left or right to adjust course?
         turnAngle = direction.get_angle(currentBearing, prevBearing)
         pastBearing = currentBearing
         newBearing = direction.bearings(turnAngle)
-        
+        '''
         #Perform actual car movement
         print ""
         print 'Current Moving Direction... ',newBearing
         #direction.motorController(newBearing)
-    
+        '''
     #Current travel node
+    '''
     print ""
     print 'Current Target Coordinate Node: ',route[route_index]
-    print 'Number of Nodes Until Destination: ',len(route) - (route_index+1)
+    print 'Number of Nodes Until Destination: ',len(route) - (route_index)
+    '''
     clock_cycle = clock_cycle + 1
     
     #Update navigation every .5 seconds

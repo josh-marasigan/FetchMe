@@ -8,20 +8,14 @@ from time import sleep
 from pythonled import pythonled
 
 ADC.setup()
-
 #Front, Right, Left, Back in that order
 #USE 1.8V ONLY FOR THESE PORTS!!!
 #USE 1.8V ONLY FOR THESE PORTS!!!
 #USE 1.8V ONLY FOR THESE PORTS!!!
 #USE 1.8V ONLY FOR THESE PORTS!!!
 #There is currently a bug in the ADC driver. 
-#You'll need to read the values twice in order to get the latest value.
-'''
-GPIO.setup("P8_39", GPIO.IN)
-GPIO.setup("P8_41", GPIO.IN)
-GPIO.setup("P8_43", GPIO.IN)
-GPIO.setup("P8_45", GPIO.IN)
-'''
+#You'll need to read the values twice 
+#in order to get the latest value.
 #WE WILL FRY THE CIRCUIT IF WE DONT LOL
 #WE WILL FRY THE CIRCUIT IF WE DONT LOL
 #WE WILL FRY THE CIRCUIT IF WE DONT LOL
@@ -56,25 +50,42 @@ def is_obstruction():
 	#Analog read and time delay (Only front sensor)
 	#There is currently a bug in the ADC driver. 
 	#You'll need to read the values twice in order to get the latest value.
+	'''
+	wait_pin_change(ADC.read("AIN2"))
+	print "Front Detected"
+	'''
 	value = ADC.read("AIN2") #"P9_37"
 	value = ADC.read("AIN2")
 	
+	'''
+	#wait_pin_change(ADC.read("AIN3"))
+	#print "Right Detected"
 	valRight = ADC.read("AIN3") #"P9_38"
 	valRight = ADC.read("AIN3")
 	
+	#wait_pin_change(ADC.read("AIN0"))
+	#print "Left Detected"
 	valLeft = ADC.read("AIN0") #"P9_39"
 	valLeft = ADC.read("AIN0")
 	
+	#wait_pin_change(ADC.read("AIN1"))
+	#print "Back"
 	valBack = ADC.read("AIN1") #"P9_40"
 	valBack = ADC.read("AIN1")
-	sleep(.1)
+	'''
 	
 	#POLL FOR INTERRUPT, range is 0-1.65V
 	voltage = value * 1.8
+	'''
 	voltRight = valRight * 1.8
 	voltLeft = valLeft * 1.8
 	voltBack = valBack * 1.8
-
+	'''
+	
+	voltRight = 0
+	voltLeft = 0
+	voltBack = 0
+	
 	sensorFlag=False
 	voltArr = [voltage,voltRight,voltLeft,voltBack]
 	count = 0
@@ -104,17 +115,7 @@ def is_obstruction():
 		count = count+1
 	
 	return sensorFlag
-	'''
-	#Send boolean back
-	if sensorFlag:
-		#print ('Obstruction Detected')
-		return True
-	
-	else:
-		#print ('No Obstruction')
-		#print ('No Sensor Connection: Error')
-		return False
-	'''
+
 #Henry's Algorithm for obstacle avoidance
 def avoid_obstruction():
 	#Assert that correct movements according to obstructions
@@ -197,11 +198,7 @@ def travel(past, current):
 # Input : Two pairs of tuple coordinates
 def inRadius(first, second):
 	# Within 4th decimal coordinate
-	#radius = 0.00028 # Approx 2 feet
-	#print 'First Circle: ',pow((second[0] - first[0]),2) + pow((second[1] - first[1]),2)
-
-	#print 'Second Circle: ',pow(flt,2)
-	buffer_dist = 0.0025
+	buffer_dist = 0.0020
 	
 	#flt = float(radius)
 	#isInside = (pow((second[0] - first[0]),2) + pow((second[1] - first[1]),2) < pow(flt,2))
@@ -234,37 +231,7 @@ def motorController(bearing):
 		GPIO.output("P8_9", GPIO.LOW)
 		GPIO.output("P8_11", GPIO.LOW)
 		GPIO.output("P8_14", GPIO.LOW)
-		
-	elif bearing == 'E': #turn left, 1 period
-		GPIO.output("P8_8", GPIO.HIGH)
-		GPIO.output("P8_9", GPIO.LOW)
-		GPIO.output("P8_11", GPIO.HIGH)
-		GPIO.output("P8_14", GPIO.LOW)
-		
-	elif bearing == 'SE': #turn left 2 periods
-		GPIO.output("P8_8", GPIO.HIGH)
-		GPIO.output("P8_9", GPIO.LOW)
-		GPIO.output("P8_11", GPIO.HIGH)
-		GPIO.output("P8_14", GPIO.LOW)
-		
-	elif bearing == 'S': #turn left 3 periods
-		GPIO.output("P8_8", GPIO.LOW)
-		GPIO.output("P8_9", GPIO.HIGH)
-		GPIO.output("P8_11", GPIO.LOW)
-		GPIO.output("P8_14", GPIO.LOW)
-		
-	elif bearing == 'SW':#turn left 4 periods
-		GPIO.output("P8_8", GPIO.LOW)
-		GPIO.output("P8_9", GPIO.HIGH)
-		GPIO.output("P8_11", GPIO.LOW)
-		GPIO.output("P8_14", GPIO.HIGH)
-		
-	elif bearing == 'W': #turn right 3 periods
-		GPIO.output("P8_8", GPIO.HIGH)
-		GPIO.output("P8_9", GPIO.LOW)
-		GPIO.output("P8_11", GPIO.HIGH)
-		GPIO.output("P8_14", GPIO.LOW)
-		
+
 	elif bearing == 'NW':
 		GPIO.output("P8_8", GPIO.HIGH)
 		GPIO.output("P8_9", GPIO.LOW)
@@ -289,6 +256,37 @@ def motorController(bearing):
 		GPIO.output("P8_11", GPIO.LOW)
 		GPIO.output("P8_14", GPIO.HIGH)
 		'''
+
+	elif bearing == 'W': #turn right 3 periods
+		GPIO.output("P8_8", GPIO.HIGH)
+		GPIO.output("P8_9", GPIO.LOW)
+		GPIO.output("P8_11", GPIO.HIGH)
+		GPIO.output("P8_14", GPIO.LOW)
+
+	elif bearing == 'E': #turn left, 1 period
+		GPIO.output("P8_8", GPIO.HIGH)
+		GPIO.output("P8_9", GPIO.LOW)
+		GPIO.output("P8_11", GPIO.HIGH)
+		GPIO.output("P8_14", GPIO.LOW)
+		
+	elif bearing == 'SE': #turn left 2 periods
+		GPIO.output("P8_8", GPIO.LOW)
+		GPIO.output("P8_9", GPIO.HIGH)
+		GPIO.output("P8_11", GPIO.HIGH)
+		GPIO.output("P8_14", GPIO.LOW)
+	
+	elif bearing == 'S': #turn left 3 periods
+		GPIO.output("P8_8", GPIO.LOW)
+		GPIO.output("P8_9", GPIO.HIGH)
+		GPIO.output("P8_11", GPIO.LOW)
+		GPIO.output("P8_14", GPIO.LOW)
+	
+	elif bearing == 'SW':#turn left 4 periods
+		GPIO.output("P8_8", GPIO.LOW)
+		GPIO.output("P8_9", GPIO.HIGH)
+		GPIO.output("P8_11", GPIO.LOW)
+		GPIO.output("P8_14", GPIO.HIGH)
+			
 	else:
 		print ("ERROR, NO BEARING")
 
@@ -373,4 +371,32 @@ def heartbeat(flip):
 		user2.off()
 		user3.off()
 		GPIO.output("P8_44", GPIO.LOW)
+		
 
+def nearly_equal(a,b,sig_fig):
+	return (a==b or int(a*10**sig_fig) == int(b*10**sig_fig))
+
+#Debouncer needed due to ultrasonic sensor noise
+def wait_pin_change():
+	print "Wait for pin debounce"
+	cur_value = is_obstruction()
+	active = 0
+
+	#200ms~2s
+	while active < 30:
+		#Inrement if no toggle
+		#if not nearly_equal(pin, cur_value,2):
+		if is_obstruction() != cur_value:
+			active += 1
+
+		#if pin.value() != cur_value:
+		#Restart Count if noise detected
+		else:
+			active = 0
+
+		sleep(.01)
+
+
+    
+    
+    
