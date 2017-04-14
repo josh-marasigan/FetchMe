@@ -204,19 +204,32 @@ class BackgroundThread(object):
         :param interval: Check interval, in seconds
         """
         self.interval = interval
+        
+        #Thread for avoidance detection
         thread = Thread(target=self.run, args=())
         thread.daemon = True
         thread.start()
+        
         print ("BACKGROUND THREAD INITIALIZED")
 
     def run(self):
         #Until the var has arrived, keep polling for obstructions
         print ("BACKGROUND THREAD RUNNING")
         while finishProgram==False:
-            #Insert Obstacle Avoidance Poll
+            #Insert Obstacle Avoidance Poll, set global flag true
             found_obstruction = direction.is_obstruction()
-            direction.avoid_obstruction()
-
+            
+            #Act upon detection
+            if found_obstruction:
+                #Thread for avoidance action
+                actUpon = Thread(target=direction.avoid_obstruction(), args=())
+                print("Obstruction Avoidance Start...") 
+                actUpon.daemon = True
+                actUpon.start()
+                
+                #actUpon.exit()
+                #just in case
+            
             #Keep Polling
             sleep(self.interval)
 
@@ -257,7 +270,7 @@ while(1):
     #Set current GPS as "past GPS" to compare with current to target coordinate
     myPastGPS = myGPS
     
-    #Obstruction found
+    #Obstruction found, pause thread until dealt with
     if found_obstruction:
         while found_obstruction:
             #Perform obstacle avoidance until sensors are cleared

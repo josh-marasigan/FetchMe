@@ -14,10 +14,14 @@ ADC.setup()
 #USE 1.8V ONLY FOR THESE PORTS!!!
 #USE 1.8V ONLY FOR THESE PORTS!!!
 #USE 1.8V ONLY FOR THESE PORTS!!!
-GPIO.setup("P8_6", GPIO.IN)
-GPIO.setup("P8_7", GPIO.IN)
-GPIO.setup("P8_12", GPIO.IN)
-GPIO.setup("P8_13", GPIO.IN)
+#There is currently a bug in the ADC driver. 
+#You'll need to read the values twice in order to get the latest value.
+'''
+GPIO.setup("P8_39", GPIO.IN)
+GPIO.setup("P8_41", GPIO.IN)
+GPIO.setup("P8_43", GPIO.IN)
+GPIO.setup("P8_45", GPIO.IN)
+'''
 #WE WILL FRY THE CIRCUIT IF WE DONT LOL
 #WE WILL FRY THE CIRCUIT IF WE DONT LOL
 #WE WILL FRY THE CIRCUIT IF WE DONT LOL
@@ -43,26 +47,77 @@ directions = ["NE", "E", "SE", "S", "SW", "W", "NW", "N"]
 obsL = False
 obsC = False
 obsR = False
-obsBL = False
+obsB = False
 obsBR = False
+obsBL = False
 
 #Need to interface 5 sensors
 def is_obstruction():
 	#Analog read and time delay (Only front sensor)
-	value = ADC.read("P9_36")
-	sleep(.2)
+	#There is currently a bug in the ADC driver. 
+	#You'll need to read the values twice in order to get the latest value.
+	value = ADC.read("AIN2") #"P9_37"
+	value = ADC.read("AIN2")
 	
+	valRight = ADC.read("AIN3") #"P9_38"
+	valRight = ADC.read("AIN3")
+	
+	valLeft = ADC.read("AIN0") #"P9_39"
+	valLeft = ADC.read("AIN0")
+	
+	valBack = ADC.read("AIN1") #"P9_40"
+	valBack = ADC.read("AIN1")
+	sleep(.1)
 	
 	#POLL FOR INTERRUPT, range is 0-1.65V
 	voltage = value * 1.8
-	if voltage > 1.6:
+	voltRight = valRight * 1.8
+	voltLeft = valLeft * 1.8
+	voltBack = valBack * 1.8
+
+	sensorFlag=False
+	voltArr = [voltage,voltRight,voltLeft,voltBack]
+	count = 0
+	for v in voltArr:
+		print (v)
+		if v > 1.6:
+			sensorFlag=True
+
+			#Poll which sensor went off
+			if count==0:
+				obsC=True
+			
+			elif count==1:
+				obsR=True
+
+			elif count==2:
+				obsL=True
+			
+			elif count==3:
+				obsB=True
+		else:
+			if count==0:
+				obsC=False
+
+			elif count==1:
+				obsR=False
+
+			elif count==2:
+				obsL=False
+
+			elif count==3:
+				obsB=False
+
+		#increment
+		count = count+1
+	
+	#Send boolean back
+	if sensorFlag:
 		print ('Obstruction Detected')
-		obsC = True
 		return True
-	elif voltage < .3:
-		print ('No Obstruction')
-		return False
+	
 	else:
+		print ('No Obstruction')
 		#print ('No Sensor Connection: Error')
 		return False
 
@@ -74,32 +129,44 @@ def avoid_obstruction():
 	global obsR
 	global obsBL
 	global obsBR
+	avoidCount=0
+	obsBR = obsB
+	obsBL = obsB
 	
 	#Poll analog ports to update obs variables/prevent lock
 	if obsC == True:
+		print("Only Thread Running should be actUpon...")
 		while obsC == True:
+			print("Iteration count... ",avoidCount)
+			#Can go right
 			if obsR == False:
 				
+				#Go back left first
 				if obsBL == False:
 					bearing = 'SW'
 					sleep(1)
 					
+					#Go straight now (Turning right essentially)
 					if obsC == False:
 						bearing = 'N'
 						sleep(3)
 			
 			elif obsR == True and obsL == False:
 				
+				#Go back left first
 				if obsBR == False:
 					bearing = 'SE'
 					sleep(1)
 					
+					#Go straight now (Turning right essentially)
 					if obsC == False:
 						bearing = 'N'
 						sleep(3)
 			
 			else:
 				print ("No Obstruction")
+			
+			avoidCount=avoidCount+1
 
 #Inputs: myGPS.latDeg, myGPS.latMin, myGPS.lonDeg, myGPS.lonMin
 #Outputs: Converted Coordinates in Radians
@@ -281,7 +348,7 @@ def get_angle(angle_A, angle_B):
 		result = theta
 	
 	return result*sign
-	
+
 #Simple Heartbeat
 def heartbeat(flip):
 	#Toggle
