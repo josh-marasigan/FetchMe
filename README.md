@@ -25,10 +25,10 @@ With the help of our industry sponsor, Texas Instruments, and our faculty mentor
 
 <strong><u>GPIO (MSP430) to Ulstrasonic Sensor Control (BeagleBone)</u></strong><br>
 <i>BeagleBone Input</i><br>
-<b>P8_39</b>: Front Sensor<br>
-<b>P8_41</b>: Right Sensor<br>
-<b>P8_43</b>: Left Sensor<br>
-<b>P8_45</b>: Back Sensor<br>
+<b>AIN2 (P9_37)</b>: Front Sensor<br>
+<b>AIN3 (P9_38)</b>: Right Sensor<br>
+<b>AIN0 (P9_39)</b>: Left Sensor<br>
+<b>AIN1 (P9_40)</b>: Back Sensor<br>
 
 <b><u>MSP430 Output</u></b><br>
 <b>P1.1</b>: Obstruction Flag (High when F/R/L/B Sensor Echo returns High)<br>
