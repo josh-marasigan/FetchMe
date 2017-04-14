@@ -144,28 +144,26 @@ def avoid_obstruction():
 				#Go back left first
 				if obsBL == False:
 					bearing = 'SW'
-					sleep(1)
 					
 					#Go straight now (Turning right essentially)
 					if obsC == False:
 						bearing = 'N'
-						sleep(3)
 			
 			elif obsR == True and obsL == False:
 				
 				#Go back left first
 				if obsBR == False:
 					bearing = 'SE'
-					sleep(1)
 					
 					#Go straight now (Turning right essentially)
 					if obsC == False:
 						bearing = 'N'
-						sleep(3)
 			
 			else:
 				print ("No Obstruction")
 			
+			motorController(bearing)
+			sleep(5)
 			avoidCount=avoidCount+1
 
 #Inputs: myGPS.latDeg, myGPS.latMin, myGPS.lonDeg, myGPS.lonMin
@@ -229,7 +227,7 @@ def inRadius(first, second):
 #Accommodate bearings with direction. These ports will remain at specified state
 #until updated accordingly
 def motorController(bearing):
-	if bearing == 'NE': #going straight
+	if bearing == 'N': #going straight
 		GPIO.output("P8_8", GPIO.HIGH)
 		GPIO.output("P8_9", GPIO.LOW)
 		GPIO.output("P8_11", GPIO.HIGH)
@@ -271,7 +269,7 @@ def motorController(bearing):
 		GPIO.output("P8_11", GPIO.LOW)
 		GPIO.output("P8_14", GPIO.HIGH)
 		
-	elif bearing == 'N': #turn right 1 period
+	elif bearing == 'NE': #turn right 1 period
 		GPIO.output("P8_8", GPIO.HIGH)
 		GPIO.output("P8_9", GPIO.LOW)
 		GPIO.output("P8_11", GPIO.LOW)
@@ -361,3 +359,4 @@ def heartbeat(flip):
 		user2.off()
 		user3.off()
 		GPIO.output("P8_44", GPIO.LOW)
+

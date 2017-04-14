@@ -13,6 +13,9 @@ getcontext().prec = 6
 UART.setup("UART1")
 ser=serial.Serial('/dev/ttyO1',9600)
 
+### Test Route (RLM Bridge)
+testRoute = [(30.289288, -97.735943),(30.289471, -97.735932),(30.289571, -97.735924)]
+
 ### Route going to Jester Entrance (PCL)
 route = [(30.284743, -97.736801),(30.284591, -97.737299),(30.284100, -97.737347),(30.283469, -97.737409),(30.282684, -97.737479)]
 temp2 = [(30.284535, -97.736424),(30.284591, -97.737299),(30.284100, -97.737347),(30.283469, -97.737409),(30.282684, -97.737479)]
@@ -242,6 +245,8 @@ myPastGPS=GPS()
 #Multithread for collision avoidance loop
 backgroundObstructionThread = BackgroundThread()
 
+#Test Route for debug only
+route = testRoute
 while(1):
     #LED Heartbeat
     if clock_cycle%2==0:
