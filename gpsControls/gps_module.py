@@ -16,6 +16,7 @@ ser=serial.Serial('/dev/ttyO1',9600)
 
 ### Test Route (RLM Bridge)
 testRoute = [(30.289288, -97.735943),(30.289471, -97.735932),(30.289571, -97.735924)]
+demoRoute = [(30.173654,-97.441429),(30.173654,-97.441455)]
 
 ### Route going to Jester Entrance (PCL)
 route = [(30.284743, -97.736801),(30.284591, -97.737299),(30.284100, -97.737347),(30.283469, -97.737409),(30.282684, -97.737479)]
@@ -132,7 +133,7 @@ class GPS:
             self.currentLon = NMEA1_array[5]
             self.currentLon = self.currentLon[1:]
             self.currentLon = self.currentLon[0:4]+self.currentLon[4+1:]
-            self.currentLon = self.currentLon[0:2]+'.'+self.currentLon[2:]
+            self.currentLon = '-'+self.currentLon[0:2]+'.'+self.currentLon[2:]
             
             self.lonMin=NMEA1_array[5][-7:]
             self.lonHem=NMEA1_array[6]
@@ -160,7 +161,7 @@ class GPS:
             self.currentLon = NMEA2_array[5]
             self.currentLon = self.currentLon[1:]
             self.currentLon = self.currentLon[0:4]+self.currentLon[4+1:]
-            self.currentLon = self.currentLon[0:2]+'.'+self.currentLon[2:]
+            self.currentLon = '-'+self.currentLon[0:2]+'.'+self.currentLon[2:]
             
             self.lonMin=NMEA2_array[5][-7:]
             self.lonHem=NMEA2_array[6]
@@ -189,7 +190,7 @@ class MotorThread(object):
         print ("BACKGROUND MOTOR THREAD RUNNING")
         while finishProgram==False:
             direction.alwaysRun(newBearing)
-            sleep(self.interval)
+            #sleep(self.interval)
 
 #Class for background thread polling obstructions
 class BackgroundThread(object):
@@ -235,8 +236,8 @@ motorMovementThread = MotorThread()
 backgroundObstructionThread = BackgroundThread()
 
 #Test Route for debug only
-route = testRoute
 while(1):
+    route = demoRoute
     #LED Heartbeat
     if clock_cycle%2==0:
         flip = True

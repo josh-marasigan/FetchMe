@@ -129,7 +129,7 @@ def avoid_obstruction():
 	
 	#Poll analog ports to update obs variables/prevent lock
 	if obsC == True:
-		print("Only Thread Running should be actUpon...")
+		#print("Only Thread Running should be actUpon...")
 		while obsC == True:
 			print("Iteration count... ",avoidCount)
 			#Can go right
@@ -201,7 +201,7 @@ def inRadius(first, second):
 	#print 'First Circle: ',pow((second[0] - first[0]),2) + pow((second[1] - first[1]),2)
 
 	#print 'Second Circle: ',pow(flt,2)
-	buffer_dist = 0.0013
+	buffer_dist = 0.0025
 	
 	#flt = float(radius)
 	#isInside = (pow((second[0] - first[0]),2) + pow((second[1] - first[1]),2) < pow(flt,2))
@@ -265,18 +265,30 @@ def motorController(bearing):
 		GPIO.output("P8_11", GPIO.HIGH)
 		GPIO.output("P8_14", GPIO.LOW)
 		
-	elif bearing == 'NW':#turn right 2 periods
+	elif bearing == 'NW':
+		GPIO.output("P8_8", GPIO.HIGH)
+		GPIO.output("P8_9", GPIO.LOW)
+		GPIO.output("P8_11", GPIO.LOW)
+		GPIO.output("P8_14", GPIO.LOW)
+		'''
 		GPIO.output("P8_8", GPIO.HIGH)
 		GPIO.output("P8_9", GPIO.LOW)
 		GPIO.output("P8_11", GPIO.HIGH)
 		GPIO.output("P8_14", GPIO.LOW)
+		'''
 		
-	elif bearing == 'NE': #turn right 1 period
+	elif bearing == 'NE':
+		GPIO.output("P8_8", GPIO.HIGH)
+		GPIO.output("P8_9", GPIO.LOW)
+		GPIO.output("P8_11", GPIO.LOW)
+		GPIO.output("P8_14", GPIO.LOW)
+		#turn right 1 period
+		'''
 		GPIO.output("P8_8", GPIO.HIGH)
 		GPIO.output("P8_9", GPIO.LOW)
 		GPIO.output("P8_11", GPIO.LOW)
 		GPIO.output("P8_14", GPIO.HIGH)
-		
+		'''
 	else:
 		print ("ERROR, NO BEARING")
 

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import unittest
 #import from parent directory
 #import gps_module
@@ -6,11 +5,19 @@ import direction as Nav
 
 class TestStringMethods(unittest.TestCase):
 
+    # Test turn radius
+    def test_turn(self):
+        turnRad = Nav.get_angle(170,180)
+        print (turnRad)
+        
+        bearng = Nav.bearings(turnRad)
+        print (bearng)
+    
     # Test obstruction avoidance algorithm
     def test_avoidance(self):
         Nav.obsBL = False
         Nav.obsBR = False
-        
+        '''
         correct_movements = ['SW', 'N']
         Nav.obsR = False
         Nav.obsL = True
@@ -47,8 +54,14 @@ class TestStringMethods(unittest.TestCase):
         for e in correct_movements:
             self.assertEqual(actual_movements[count], e)
             count = count + 1
+        '''
 
     def test_in_radius(self):
+        
+        yes = Nav.inRadius((30.173654,-97.441429),(30.173633,-97.441466))
+        print yes
+        self.assertTrue(yes)
+        
         route = [(30.284743, -97.736801),(30.284591, -97.737299),(30.284100, -97.737347),(30.283469, -97.737409),(30.282684, -97.737479)]
         route1 = [(30.284731, -97.736803),(30.284583, -97.737303),(30.284102, -97.737354),(30.283469, -97.737418),(30.282683, -97.737472)]
         #route1 is actual gps coordinates
