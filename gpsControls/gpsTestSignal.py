@@ -2,6 +2,7 @@
 import serial
 import Adafruit_BBIO.UART as UART
 from time import sleep
+
 UART.setup("UART1")
 GPS = serial.Serial('/dev/ttyO1', 9600)
 isGPRMC=False
@@ -11,7 +12,9 @@ isGPGGA=False
 def poll():
     global isGPRMC
     global isGPGGA
+    
     while isGPRMC==False and isGPGGA==False:
+        
         while GPS.inWaiting()==0:
                 pass
         

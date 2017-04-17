@@ -189,8 +189,28 @@ class MotorThread(object):
     def run(self):
         print ("BACKGROUND MOTOR THREAD RUNNING")
         while finishProgram==False:
-            direction.alwaysRun(newBearing)
-            #sleep(self.interval)
+            #Go direction for only 1 second
+            global newBearing
+            
+            #Testing
+            '''
+            global clock_cycle
+            if clock_cycle%2==0:
+                newBearing='W'
+                clock_cycle=clock_cycle+1
+            '''
+            
+            if newBearing == 'N':
+                direction.alwaysRun(newBearing)
+                
+            else:
+                count = 0
+                while count < 1500:
+                    direction.alwaysRun(newBearing)
+                    count = count + 1
+                    
+                newBearing='N'
+
 
 #Class for background thread polling obstructions
 class BackgroundThread(object):
@@ -268,12 +288,10 @@ while(1):
     
     #Obstruction found, pause thread until dealt with
     #if found_obstruction:
-    if found_obstruction:
-        while found_obstruction:
-            #Perform obstacle avoidance until sensors are cleared
-            sleep(1)
-            #Wait until background thread finishes
-    
+    while found_obstruction:
+        #Wait until background thread finishes
+        sleep(1)
+
     #Get next node in path
     myGPS.read()
     if myGPS.fix!=0:
@@ -317,7 +335,13 @@ while(1):
         #Does the car need to turn left or right to adjust course?
         turnAngle = direction.get_angle(currentBearing, prevBearing)
         pastBearing = currentBearing
-        newBearing = direction.bearings(turnAngle)
+        
+        #Turn only for 3 seconds
+        tempBearing = direction.bearings(turnAngle)
+        if tempBearing != 'N' and newBearing != 'N':
+            newBearing = tempBearing
+        else:
+            newBearing = direction.bearings(turnAngle)
         
         #Perform actual car movement
         print ""

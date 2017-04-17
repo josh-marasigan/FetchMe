@@ -217,7 +217,14 @@ def inRadius(first, second):
 
 #Perpetually call this to keep motor running at all time
 #Dedicate and run a new single thread for this function
+runCount = 0
 def alwaysRun(bearing):
+	global runCount
+	if runCount % 500 == 0:
+		print "Heading to Direction ", bearing, runCount
+	
+	runCount = runCount + 1
+	
 	if bearing!="X":
 		motorController(bearing)
 
@@ -349,7 +356,8 @@ def get_angle(angle_A, angle_B):
 	sign = 1
 	
 	#Signed Angle
-	if not ((angle_A-angle_B >= 0 and angle_A-angle_B <= 180) or (angle_A-angle_B <= -180 and angle_A-angle_B >= -360)):
+	if not ((angle_A-angle_B >= 0 and angle_A-angle_B <= 180) 
+		or (angle_A-angle_B <= -180 and angle_A-angle_B >= -360)):
 		sign = -1
 
 	if theta > 180:
