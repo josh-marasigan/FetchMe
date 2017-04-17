@@ -7,6 +7,7 @@ GPS = serial.Serial('/dev/ttyO1', 9600)
 isGPRMC=False
 isGPGGA=False
 
+#Poll for new GPA coordinates
 def poll():
     global isGPRMC
     global isGPGGA

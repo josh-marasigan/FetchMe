@@ -267,9 +267,8 @@ while(1):
     myPastGPS = myGPS
     
     #Obstruction found, pause thread until dealt with
-    
     #if found_obstruction:
-    if False:
+    if found_obstruction:
         while found_obstruction:
             #Perform obstacle avoidance until sensors are cleared
             sleep(1)
@@ -318,9 +317,6 @@ while(1):
         #Does the car need to turn left or right to adjust course?
         turnAngle = direction.get_angle(currentBearing, prevBearing)
         pastBearing = currentBearing
-        
-        #Set Global Bearing to updated bearing
-        global newBearing
         newBearing = direction.bearings(turnAngle)
         
         #Perform actual car movement
