@@ -396,7 +396,3 @@ def wait_pin_change():
 
 		sleep(.01)
 
-
-    
-    
-    

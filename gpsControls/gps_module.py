@@ -255,11 +255,9 @@ while(1):
     direction.heartbeat(flip)
     
     #Get current clock cycle (For turn timing)
-    '''
     print ""
     print "Iteration Count: " + str(clock_cycle)
     print ""
-    '''
     
     #Calculate the car's heading traveled between the GPS polls
     if clock_cycle!=0:
@@ -280,12 +278,10 @@ while(1):
     #Get next node in path
     myGPS.read()
     if myGPS.fix!=0:
-        '''
         print("")
         print ("Current Latitude... ",myGPS.currentLat)
         print ("Current Longitude...",myGPS.currentLon)
         print("")
-        '''
         
         if myGPS.currentLat=='.':
             myGPS.currentLat='0.0'
@@ -308,33 +304,35 @@ while(1):
         #Bearing in terms of CURRENT LOCATION towards NEXT TARGET NODE
         target_node = route[route_index]
         currentBearing = direction.calculate_initial_compass_bearing((myGPS.currentLat,myGPS.currentLon),(target_node[0],target_node[1]))
-        '''
+        
         print ""
         print 'Current Bearing in Degrees... ',currentBearing
-        '''
+        
         #Bearing in terms of CURRENT LOCATION from PAST LOCATION
         past_node = (myPastGPS.currentLat,myPastGPS.currentLon)
         prevBearing = direction.calculate_initial_compass_bearing((past_node[0],past_node[1]),(myGPS.currentLat,myGPS.currentLon))
-        '''
+        
         print("")
         print 'Past Bearing in Degrees... ',prevBearing
-        '''
+        
         #Does the car need to turn left or right to adjust course?
         turnAngle = direction.get_angle(currentBearing, prevBearing)
         pastBearing = currentBearing
+        
+        #Set Global Bearing to updated bearing
+        global newBearing
         newBearing = direction.bearings(turnAngle)
-        '''
+        
         #Perform actual car movement
         print ""
         print 'Current Moving Direction... ',newBearing
         #direction.motorController(newBearing)
-        '''
+        
     #Current travel node
-    '''
     print ""
     print 'Current Target Coordinate Node: ',route[route_index]
     print 'Number of Nodes Until Destination: ',len(route) - (route_index)
-    '''
+    
     clock_cycle = clock_cycle + 1
     
     #Update navigation every .5 seconds

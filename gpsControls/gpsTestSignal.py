@@ -28,6 +28,4 @@ def poll():
     isGPRMC=False
     isGPGGA=False
     return NMEA
-    
-    
-    
+
