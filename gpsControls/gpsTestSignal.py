@@ -29,3 +29,9 @@ def poll():
     isGPGGA=False
     return NMEA
 
+#Kalman Filter for more accuracy
+def kalmanFilter(GPS):
+    print GPS
+    #ToDo
+    return
+
