@@ -6,6 +6,7 @@ import math
 from math import radians, cos, sin, asin, sqrt
 from time import sleep
 from pythonled import pythonled
+from decimal import *
 
 ADC.setup()
 #Front, Right, Left, Back in that order
@@ -198,14 +199,23 @@ def travel(past, current):
 # Input : Two pairs of tuple coordinates
 def inRadius(first, second):
 	# Within 4th decimal coordinate
-	buffer_dist = 0.0020
+	buffer_dist = 0.009
 	
 	#flt = float(radius)
 	#isInside = (pow((second[0] - first[0]),2) + pow((second[1] - first[1]),2) < pow(flt,2))
 	lon1 = first[0]
 	lat1 = first[1]
-	lon2 = second[0]
-	lat2 = second[1]
+
+	print second
+
+	getcontext().prec = 6
+	lon2 = Decimal(second[0])
+	lat2 = Decimal(second[1])
+	
+	lon2 = round(lon2,6)
+	lat2 = round(lat2,6)
+	
+	print "Second Longitude... ", lon2," Second Latitude... ", lat2
 	
 	#find distance between coordinates by haversine formula
 	distance = haversine(lon1, lat1, lon2, lat2)
@@ -219,11 +229,13 @@ def inRadius(first, second):
 #Dedicate and run a new single thread for this function
 runCount = 0
 def alwaysRun(bearing):
+	'''
 	global runCount
 	if runCount % 3000 == 0:
 		print "Heading to Direction ", bearing, runCount
 	
 	runCount = runCount + 1
+	'''
 	
 	if bearing!="X":
 		motorController(bearing)

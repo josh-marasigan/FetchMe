@@ -58,7 +58,7 @@ class TestStringMethods(unittest.TestCase):
 
     def test_in_radius(self):
         
-        yes = Nav.inRadius((30.173654,-97.441429),(30.173633,-97.441466))
+        yes = Nav.inRadius((30.173359,-97.442115),(30.173266,-97.442186))
         print yes
         self.assertTrue(yes)
         

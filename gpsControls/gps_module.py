@@ -28,6 +28,8 @@ route2 = temp2[::-1]
 ### Route going to Jester Entrance (Gregory)
 route3 = [(30.284535, -97.736424),(30.284591, -97.737299),(30.284100, -97.737347),(30.283469, -97.737409),(30.283411, -97.736777)]
 
+routeRLM = [(30.173359,-97.442115),(30.173266,-97.442186)]
+
 #Directions
 bearings = ["NE", "E", "SE", "S", "SW", "W", "NW", "N"]
 clock_cycle = 0
@@ -282,11 +284,11 @@ myPastGPS=GPS()
 
 #Multithread for collision avoidance loop and motor
 motorMovementThread = MotorThread()
-backgroundObstructionThread = BackgroundThread()
+#backgroundObstructionThread = BackgroundThread()
 
 #Test Route for debug only
 while(1):
-    route = demoRoute
+    route = routeRLM
     #LED Heartbeat
     if clock_cycle%2==0:
         flip = True
