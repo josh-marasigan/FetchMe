@@ -52,6 +52,8 @@ With the help of our industry sponsor, Texas Instruments, and our faculty mentor
   <b>Josh Marasigan</b></a> - Software Engineering and Design<br>
   <a href="https://www.linkedin.com/in/ross-han-30567489/" style="text-decoration: none">
   <b>Ross Han</b></a> - Energy Systems and Renewable Energy<br>
+  <a href="https://www.linkedin.com/in/taylor-vogt-634b48b9/" style="text-decoration: none">
+  <b>Taylor Vogt</b></a> - Integrated Circuits and Nanotechnology<br>
   <a href="https://www.linkedin.com/in/yueheng-zhang/" style="text-decoration: none">
   <b>Yueheng (Henry) Zhang</b></a> - Software Engineering and Design<br>
 </p>
