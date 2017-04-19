@@ -1,7 +1,5 @@
-## FetchMe
 <p align="center">
-  <img width="400" height="300" src="http://tinyimg.io/i/H6cgMyd.png"><br>
-  <strong>Autonomous Campus delivery for The University of Texas at Austin</strong>
+  <img width="440" height="400" src="http://tinyimg.io/i/MmtUdwl.png"><br>
 </p>
 
 ## Inspiration
@@ -12,9 +10,9 @@ Driver-less cars are an emerging technology which has the potential to impact ma
 With the help of our industry sponsor, Texas Instruments, and our faculty mentor, Dr. David Pan, we hope to make UT Austin the first university in the world to have autonomous delivery for its students!
 
 ## Design Overview and GPIO Ports
-<p align="center">
-  <img width="600" height="400" src="http://tinyimg.io/i/FkfJGkR.PNG"><br>
-  <strong>Top Level Block Diagram</strong>
+<p align="center"><br>
+  <strong>Top Level Block Diagram</strong><br><br>
+  <img width="550" height="400" src="http://tinyimg.io/i/FkfJGkR.PNG"><br>
 </p><br><br>
 
 <strong><u>GPIO (BeagleBone) to Motor Control</u></strong><br>
@@ -54,6 +52,8 @@ With the help of our industry sponsor, Texas Instruments, and our faculty mentor
   <b>Josh Marasigan</b></a> - Software Engineering and Design<br>
   <a href="https://www.linkedin.com/in/ross-han-30567489/" style="text-decoration: none">
   <b>Ross Han</b></a> - Energy Systems and Renewable Energy<br>
+  <a href="https://www.linkedin.com/in/taylor-vogt-634b48b9/" style="text-decoration: none">
+  <b>Taylor Vogt</b></a> - Integrated Circuits and Nanotechnology<br>
   <a href="https://www.linkedin.com/in/yueheng-zhang/" style="text-decoration: none">
   <b>Yueheng (Henry) Zhang</b></a> - Software Engineering and Design<br>
 </p>
