@@ -292,12 +292,11 @@ while(1):
     #LED Heartbeat
     if clock_cycle%2==0:
         flip = True
+        direction.heartbeat(flip)
     else:
         flip = False
+        direction.heartbeat(flip)
 
-    #Continue to Blink Green LED until destination
-    direction.heartbeat(flip)
-    
     #Get current clock cycle (For turn timing)
     print ""
     print "Iteration Count: " + str(clock_cycle)
@@ -386,6 +385,6 @@ while(1):
     
     clock_cycle = clock_cycle + 1
     
-    #Update navigation every 8 seconds
-    sleep(8)
+    #Update navigation every .5 seconds
+    sleep(3)
     

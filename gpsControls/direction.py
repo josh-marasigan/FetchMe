@@ -32,8 +32,10 @@ GPIO.setup("P8_14", GPIO.OUT)
 GPIO.setup("P8_44", GPIO.OUT)
 user2 = pythonled(2)
 user3 = pythonled(3)
+user0 = pythonled(0)
 user2.off()
 user3.off()
+user0.off()
 
 #Directions
 directions = ["NE", "E", "SE", "S", "SW", "W", "NW", "N"]
@@ -239,11 +241,6 @@ def alwaysRun(bearing):
 	
 	if bearing!="X":
 		motorController(bearing)
-	else:
-		GPIO.output("P8_8", GPIO.LOW)
-		GPIO.output("P8_9", GPIO.LOW)
-		GPIO.output("P8_11", GPIO.LOW)
-		GPIO.output("P8_14", GPIO.LOW)
 
 #Accommodate bearings with direction. These ports will remain at specified state
 #until updated accordingly
