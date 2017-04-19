@@ -10,9 +10,9 @@ Driver-less cars are an emerging technology which has the potential to impact ma
 With the help of our industry sponsor, Texas Instruments, and our faculty mentor, Dr. David Pan, we hope to make UT Austin the first university in the world to have autonomous delivery for its students!
 
 ## Design Overview and GPIO Ports
-<p align="center">
-  <img width="600" height="400" src="http://tinyimg.io/i/FkfJGkR.PNG"><br>
-  <strong>Top Level Block Diagram</strong>
+<p align="center"><br>
+  <strong>Top Level Block Diagram</strong><br><br>
+  <img width="550" height="400" src="http://tinyimg.io/i/FkfJGkR.PNG"><br>
 </p><br><br>
 
 <strong><u>GPIO (BeagleBone) to Motor Control</u></strong><br>
