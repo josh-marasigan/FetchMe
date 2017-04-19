@@ -386,6 +386,6 @@ while(1):
     
     clock_cycle = clock_cycle + 1
     
-    #Update navigation every .5 seconds
-    sleep(3)
+    #Update navigation every 8 seconds
+    sleep(8)
     

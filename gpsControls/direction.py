@@ -239,6 +239,11 @@ def alwaysRun(bearing):
 	
 	if bearing!="X":
 		motorController(bearing)
+	else:
+		GPIO.output("P8_8", GPIO.LOW)
+		GPIO.output("P8_9", GPIO.LOW)
+		GPIO.output("P8_11", GPIO.LOW)
+		GPIO.output("P8_14", GPIO.LOW)
 
 #Accommodate bearings with direction. These ports will remain at specified state
 #until updated accordingly
