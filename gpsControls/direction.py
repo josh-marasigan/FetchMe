@@ -403,3 +403,10 @@ def wait_pin_change():
 
 		sleep(.01)
 
+#Time delay: 5s
+def setDelay():
+	count = 0
+	while count < 500:
+		sleep(.01)
+
+	return

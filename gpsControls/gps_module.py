@@ -229,7 +229,7 @@ class BackgroundThread(object):
     def run(self):
         #Until the var has arrived, keep polling for obstructions
         print ("BACKGROUND SENSORS THREAD RUNNING")
-        while finishProgram==False:
+        while not finishProgram:
             print "POLL OBSTRUCTION"
             #Insert Obstacle Avoidance Poll, set global flag true
             
@@ -311,8 +311,9 @@ while(1):
         
         if direction.inRadius((latD,lonD),route[route_index]):
             if route_index == len(route)-1:
-                print ('ARRIVED')
+                print 'ARRIVED'
                 finishProgram = True
+                
                 #Exit thread
                 break
             else:
