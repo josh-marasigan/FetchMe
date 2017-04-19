@@ -220,7 +220,7 @@ def inRadius(first, second):
 runCount = 0
 def alwaysRun(bearing):
 	global runCount
-	if runCount % 500 == 0:
+	if runCount % 3000 == 0:
 		print "Heading to Direction ", bearing, runCount
 	
 	runCount = runCount + 1

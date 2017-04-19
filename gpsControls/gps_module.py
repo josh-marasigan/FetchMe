@@ -45,6 +45,7 @@ newBearing = "X"
 pastBearing = "X"
 NMEA1_global = ""
 NMEA2_global = ""
+caseFlag=False
 
 class GPS:
     #Global Current Latitude and Longitude
@@ -199,17 +200,38 @@ class MotorThread(object):
                 newBearing='W'
                 clock_cycle=clock_cycle+1
             '''
+            global caseFlag
+            if caseFlag:
+                flagcount = 0
+                while flagcount < 8000:
+                    direction.alwaysRun(newBearing)
+                    flagcount = flagcount + 1
+                
+                
+                newBearing='N'
+                print newBearing, "Now headed"
+                caseFlag=False
             
+            else:
+                print "Standard Direction"
+                count = 0
+                while count < 12000:
+                    direction.alwaysRun('N')
+                    count = count + 1
+                
+            
+            '''
             if newBearing == 'N':
                 direction.alwaysRun(newBearing)
                 
             else:
                 count = 0
-                while count < 1500:
+                while count < 15000:
                     direction.alwaysRun(newBearing)
                     count = count + 1
                     
                 newBearing='N'
+            '''
 
 
 #Class for background thread polling obstructions
@@ -339,10 +361,16 @@ while(1):
         
         #Turn only for 3 seconds
         tempBearing = direction.bearings(turnAngle)
-        if tempBearing != 'N' and newBearing != 'N':
+        print caseFlag
+        print "Want to Head... ",tempBearing, " Actually Heading... " ,newBearing
+        if tempBearing != 'N':
+            #newBearing = tempBearing
+            #newBearing = 'N'
             newBearing = tempBearing
+            caseFlag=True
         else:
-            newBearing = direction.bearings(turnAngle)
+            newBearing = tempBearing
+            caseFlag=False
         
         #Perform actual car movement
         print ""
