@@ -303,11 +303,14 @@ while(1):
     print ""
     
     #Calculate the car's heading traveled between the GPS polls
+    '''
     if clock_cycle!=0:
         pastBearing = direction.calculate_initial_compass_bearing((myPastGPS.currentLat, myPastGPS.currentLon),(myGPS.currentLat,myGPS.currentLon))
-    
+    '''
+
     #Set current GPS as "past GPS" to compare with current to target coordinate
-    myPastGPS = myGPS
+    if clock_cycle==0:
+        myPastGPS = myGPS
     
     #Obstruction found, pause thread until dealt with
     #if found_obstruction:
@@ -357,8 +360,8 @@ while(1):
         print 'Past Bearing in Degrees... ',prevBearing
         
         #Does the car need to turn left or right to adjust course?
-        turnAngle = direction.get_angle(currentBearing, prevBearing)
-        pastBearing = currentBearing
+        turnAngle = direction.get_angle(prevBearing,currentBearing)
+        #pastBearing = currentBearing
         
         #Turn only for 3 seconds
         tempBearing = direction.bearings(turnAngle)
@@ -384,7 +387,8 @@ while(1):
     print 'Number of Nodes Until Destination: ',len(route) - (route_index)
     
     clock_cycle = clock_cycle + 1
-    
+    myPastGPS = myGPS
+
     #Update navigation every .5 seconds
     sleep(3)
     
