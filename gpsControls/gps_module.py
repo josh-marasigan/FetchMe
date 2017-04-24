@@ -18,12 +18,16 @@ ser=serial.Serial('/dev/ttyO1',9600)
 testRoute = [(30.289288, -97.735943),(30.289471, -97.735932),(30.289571, -97.735924)]
 demoRoute = [(30.173654,-97.441429),(30.173654,-97.441455)]
 
+testRoute2 = [(30.173539,-97.441455),(30.173613,-97.441459)]
+
 ### Route going to Jester Entrance (PCL)
 route = [(30.284743, -97.736801),(30.284591, -97.737299),(30.284100, -97.737347),(30.283469, -97.737409),(30.282684, -97.737479)]
 temp2 = [(30.284535, -97.736424),(30.284591, -97.737299),(30.284100, -97.737347),(30.283469, -97.737409),(30.282684, -97.737479)]
 
 ### Reverse of T2 (Going back)
 route2 = temp2[::-1]
+
+RLM2 = [(30.173472,-97.441573),(30.173716,-97.441460)]
 
 ### Route going to Jester Entrance (Gregory)
 route3 = [(30.284535, -97.736424),(30.284591, -97.737299),(30.284100, -97.737347),(30.283469, -97.737409),(30.283411, -97.736777)]
@@ -192,16 +196,7 @@ class MotorThread(object):
     def run(self):
         print ("BACKGROUND MOTOR THREAD RUNNING")
         while finishProgram==False:
-            #Go direction for only 1 second
             global newBearing
-            
-            #Testing
-            '''
-            global clock_cycle
-            if clock_cycle%2==0:
-                newBearing='W'
-                clock_cycle=clock_cycle+1
-            '''
             global caseFlag
             if caseFlag:
                 flagcount = 0
@@ -218,23 +213,9 @@ class MotorThread(object):
                 print "Standard Direction"
                 count = 0
                 while count < 12000:
-                    direction.alwaysRun('N')
+                    ber = "N"
+                    direction.alwaysRun(ber)
                     count = count + 1
-                
-            
-            '''
-            if newBearing == 'N':
-                direction.alwaysRun(newBearing)
-                
-            else:
-                count = 0
-                while count < 15000:
-                    direction.alwaysRun(newBearing)
-                    count = count + 1
-                    
-                newBearing='N'
-            '''
-
 
 #Class for background thread polling obstructions
 class BackgroundThread(object):
@@ -288,7 +269,7 @@ motorMovementThread = MotorThread()
 
 #Test Route for debug only
 while(1):
-    route = routeRLM
+    route = RLM2
     #LED Heartbeat
     if clock_cycle%2==0:
         flip = True
@@ -353,11 +334,15 @@ while(1):
         print 'Current Bearing in Degrees... ',currentBearing
         
         #Bearing in terms of CURRENT LOCATION from PAST LOCATION
-        past_node = (myPastGPS.currentLat,myPastGPS.currentLon)
+        if clock_cycle==0:
+            past_node = (myPastGPS.currentLat,myPastGPS.currentLon)
+        
+        print past_node[0],past_node[1],"..........",myGPS.currentLat,myGPS.currentLon
         prevBearing = direction.calculate_initial_compass_bearing((past_node[0],past_node[1]),(myGPS.currentLat,myGPS.currentLon))
         
         print("")
         print 'Past Bearing in Degrees... ',prevBearing
+        print 'Current Bearing in Degrees... ',currentBearing
         
         #Does the car need to turn left or right to adjust course?
         turnAngle = direction.get_angle(prevBearing,currentBearing)
@@ -387,8 +372,9 @@ while(1):
     print 'Number of Nodes Until Destination: ',len(route) - (route_index)
     
     clock_cycle = clock_cycle + 1
+    past_node = (myGPS.currentLat,myGPS.currentLon)
     myPastGPS = myGPS
 
-    #Update navigation every .5 seconds
-    sleep(3)
+    #Update navigation every 2 seconds
+    sleep(2)
     

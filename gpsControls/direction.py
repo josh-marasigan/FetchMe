@@ -229,16 +229,7 @@ def inRadius(first, second):
 
 #Perpetually call this to keep motor running at all time
 #Dedicate and run a new single thread for this function
-runCount = 0
 def alwaysRun(bearing):
-	'''
-	global runCount
-	if runCount % 3000 == 0:
-		print "Heading to Direction ", bearing, runCount
-	
-	runCount = runCount + 1
-	'''
-	
 	if bearing!="X":
 		motorController(bearing)
 
