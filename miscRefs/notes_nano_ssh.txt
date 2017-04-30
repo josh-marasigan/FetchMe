@@ -7,23 +7,48 @@ db   // Display current db
 use <database>    // Use or make indicated DB
 
 ///////////////////////////////////////////
-Nano:
+Kalman Filters:
+(https://pykalman.github.io/)
+More accurate localization for rc car
+
+Nano  Shortcuts:
 Ctrl + O : Save
 Ctrl + X : Close
 Ctrl+X , Y and Enter
 
+Debian/BeagleBone SSH:
+Log in as 'root'
+
 // Navigate to User Home Directory
 cd ~
+
 // Show current directory
 pwd
+
 // cd to home debian
 cd /home/debian
+
 // Edit File blink.py
-nano blink.py 
-// EDIT
+nano blink.py [Install]
+WantedBy=multi-user.target
+Description=Hue Booter
+
+[Service]
+WorkingDirectory=/home/debian/
+ExecStart=sudo python gps_module.py
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=node
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
+
+// Run
 sudo python blink.py
 
-/* Make launch auto */
+Auto-Run Python Script @ Boot:
 sudo crontab -e
 // Type in
 @reboot python /home/debian/blink.py &

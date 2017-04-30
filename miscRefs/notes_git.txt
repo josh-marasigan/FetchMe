@@ -49,3 +49,10 @@ Move File to Directory in local Repo
 mkdir dir_name
 git mv hello.html dir_name
 git status
+
+Remove Popup Git Login Prompt
+git config --global core.askPass ""
+
+Install Dependencies Python:
+python -m pip freeze
+python -m pip -r requirements
